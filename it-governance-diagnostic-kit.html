@@ -1,0 +1,1058 @@
+<title>IT Governance Diagnostic Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: boardroom ledger — deep-pine header band, numbered step rail + working column; evidence questions as ledger rows; presentation as 16:9 slides */
+:root{
+  --paper:#EEF1EC; --surface:#F8FAF6; --sunk:#E3E9E4; --ink:#12201B; --muted:#56645E; --line:#C9D3CC;
+  --panel:#12201B; --panel-ink:#EEF1EC; --panel-muted:#A9BBB2; --panel-line:#2E433A;
+  --accent:#1F6B52; --accent-ink:#FFFFFF; --accent-wash:#DDEBE4;
+  --brass:#D9A84A; --brass-ink:#875C10; --brass-wash:#F4E6C6;
+  --strong:#1F6B52; --strong-wash:#DDEBE4; --partial:#875C10; --partial-wash:#F4E6C6;
+  --weak:#A3392B; --weak-wash:#F5E1DC; --na:#6E7C76; --na-wash:#E3E9E4;
+  --f-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-body:"IBM Plex Sans",system-ui,"Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-ar:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
+  /* presentation slides keep one fixed look in both themes */
+  --sl-paper:#EEF1EC; --sl-card:#F8FAF6; --sl-ink:#12201B; --sl-muted:#4F5D57; --sl-line:#C9D3CC;
+  --sl-deep:#12201B; --sl-deep-ink:#EEF1EC; --sl-deep-muted:#B7C7BF; --sl-deep-line:#2E433A;
+  --sl-brass:#D9A84A; --sl-brass-ink:#875C10; --sl-green:#1F6B52; --sl-rust:#A3392B;
+  --overlay:#080D0B;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0D1512; --surface:#141F1B; --sunk:#1B2823; --ink:#E3EAE6; --muted:#98A9A1; --line:#2B3A34;
+  --panel:#0A110E; --panel-ink:#E9EFEB; --panel-muted:#9FB3AA; --panel-line:#25362F;
+  --accent:#5FBF98; --accent-ink:#0B1411; --accent-wash:#17302A;
+  --brass:#D9A84A; --brass-ink:#E2B865; --brass-wash:#2C2516;
+  --strong:#5FBF98; --strong-wash:#17302A; --partial:#E2B865; --partial-wash:#2C2516;
+  --weak:#EE8D7A; --weak-wash:#33201C; --na:#8A9A93; --na-wash:#1B2823; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0D1512; --surface:#141F1B; --sunk:#1B2823; --ink:#E3EAE6; --muted:#98A9A1; --line:#2B3A34;
+  --panel:#0A110E; --panel-ink:#E9EFEB; --panel-muted:#9FB3AA; --panel-line:#25362F;
+  --accent:#5FBF98; --accent-ink:#0B1411; --accent-wash:#17302A;
+  --brass:#D9A84A; --brass-ink:#E2B865; --brass-wash:#2C2516;
+  --strong:#5FBF98; --strong-wash:#17302A; --partial:#E2B865; --partial-wash:#2C2516;
+  --weak:#EE8D7A; --weak-wash:#33201C; --na:#8A9A93; --na-wash:#1B2823; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--panel)}
+h1,h2,h3,h4{margin:0;text-wrap:balance;line-height:1.2}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono)}
+.ar{display:none;direction:rtl;text-align:right;font-family:var(--f-ar);color:var(--muted);font-size:14px;line-height:1.75}
+.show-ar .ar{display:block}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--panel);color:var(--panel-ink);border-bottom:1px solid var(--panel-line)}
+.top-in{max-width:1320px;margin-inline:auto;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--panel-ink)}
+.brand .m{font-family:var(--f-display);font-weight:600;font-size:19px;letter-spacing:.2px}
+.brand .n{font-family:var(--f-mono);font-size:12px;letter-spacing:2px;color:var(--brass);text-transform:uppercase}
+.co{display:flex;align-items:center;gap:10px;flex:1 1 280px;min-width:0}
+.co select{flex:0 1 340px;min-width:0;background:var(--panel-line);border:1px solid var(--panel-line);color:var(--panel-ink);border-radius:8px;padding:6px 10px}
+.save{font-size:12px;color:var(--panel-muted);font-family:var(--f-mono);white-space:nowrap}
+.save.fail{color:var(--brass)}
+.acts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tog{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--panel-muted);cursor:pointer;font-family:var(--f-ar)}
+.top .btn{background:transparent;color:var(--panel-ink);border-color:var(--panel-line)}
+.top .btn.pri{background:var(--brass);color:#12201B;border-color:var(--brass)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:7px 14px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;line-height:1.3}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.warn{border-color:var(--weak);color:var(--weak)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+.banner{background:var(--brass-wash);color:var(--ink);border-bottom:1px solid var(--line);font-size:14px}
+.banner .in{max-width:1320px;margin-inline:auto;padding-block:8px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+
+/* shell */
+.shell{max-width:1320px;margin-inline:auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:36px;padding-block:28px 72px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 74px);align-self:start;display:grid;gap:2px;max-height:calc(100vh - 100px);overflow:auto}
+.st{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 10px;border-radius:9px;text-decoration:none;color:var(--muted)}
+.st:hover{background:var(--sunk);color:var(--ink)}
+.st[aria-current="page"]{background:var(--panel);color:var(--panel-ink)}
+.st .nb{font-family:var(--f-mono);font-size:12px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line)}
+.st[aria-current="page"] .nb{border-color:var(--brass);color:var(--brass)}
+.st .lb{display:grid;line-height:1.3;font-weight:600;font-size:14px;min-width:0}
+.st .lb small{font-weight:400;font-size:11.5px;font-family:var(--f-mono);opacity:.8}
+.st .pg{font-family:var(--f-mono);font-size:11.5px}
+.st .pg.done{color:var(--strong)}
+.st[aria-current="page"] .pg.done{color:var(--brass)}
+
+.main{min-width:0;display:grid;gap:28px;align-content:start}
+.sh{display:grid;gap:8px;max-width:78ch}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brass-ink)}
+.sh h1{font-family:var(--f-display);font-weight:600;font-size:36px;letter-spacing:-.2px}
+.lede{font-size:17px;color:var(--muted);max-width:72ch}
+h2.sec{font-family:var(--f-display);font-weight:600;font-size:23px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:grid;gap:14px;align-content:start;min-width:0}
+.card.dark{background:var(--panel);color:var(--panel-ink);border-color:var(--panel)}
+.card.dark .muted{color:var(--panel-muted)}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.stepnav{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px;flex-wrap:wrap}
+
+/* fields */
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 22px}
+.fld{display:grid;gap:6px;align-content:start;min-width:0}
+.fld.wide{grid-column:1/-1}
+.fld>label,.lab{font-size:13px;font-weight:600;color:var(--muted)}
+input[type=text],input[type=date],input[type=number],input:not([type]),select,textarea{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--ink)}
+textarea{resize:vertical;line-height:1.5}
+input::placeholder,textarea::placeholder{color:var(--na)}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.ck{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--surface);font-size:13.5px;cursor:pointer}
+.ck:has(input:checked){border-color:var(--accent);background:var(--accent-wash)}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:600;white-space:nowrap;line-height:1.6}
+.chip.strong{background:var(--strong-wash);color:var(--strong)}
+.chip.partial{background:var(--partial-wash);color:var(--partial)}
+.chip.weak{background:var(--weak-wash);color:var(--weak)}
+.chip.na{background:var(--na-wash);color:var(--na)}
+.tag{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);letter-spacing:.5px}
+
+/* question cards */
+.qlist{display:grid;gap:10px}
+.qc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:10px}
+.qc[data-a="3"]{border-inline-start:4px solid var(--strong)}
+.qc[data-a="2"]{border-inline-start:4px solid var(--partial)}
+.qc[data-a="1"],.qc[data-a="0"]{border-inline-start:4px solid var(--weak)}
+.qc[data-a="-1"]{border-inline-start:4px dashed var(--na)}
+.qt{font-weight:600;max-width:80ch}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{position:relative;display:inline-flex}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.opt span{border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-size:13.5px;background:var(--paper);cursor:pointer}
+.opt input:focus-visible+span{outline:2px solid var(--brass);outline-offset:2px}
+.opt.o3 input:checked+span{background:var(--strong);border-color:var(--strong);color:var(--accent-ink)}
+.opt.o2 input:checked+span{background:var(--partial);border-color:var(--partial);color:var(--paper)}
+.opt.o1 input:checked+span,.opt.o0 input:checked+span{background:var(--weak);border-color:var(--weak);color:var(--paper)}
+.opt.ou input:checked+span{background:var(--na);border-color:var(--na);color:var(--paper)}
+.evrow{display:grid;grid-template-columns:210px minmax(0,1fr);gap:8px}
+.qc[data-a=""] .evrow,.qc[data-a="-1"] .evrow{display:none}
+.capnote{font-size:12.5px;color:var(--partial);font-weight:600}
+.capnote:empty{display:none}
+
+/* principle blocks */
+.pnav{display:flex;flex-wrap:wrap;gap:6px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);z-index:5;background:var(--paper);padding-block:8px;border-bottom:1px solid var(--line)}
+.pnav button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.pblock{display:grid;gap:12px;scroll-margin-top:130px}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.phead h2{font-family:var(--f-display);font-weight:600;font-size:26px}
+.pdef{color:var(--muted);max-width:75ch}
+.pscore{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:14px}
+
+/* stakeholder rows */
+.shl{display:grid;gap:8px}
+.shr{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.shr b{display:block}
+.shr small{color:var(--muted);font-size:13px;line-height:1.4;display:block}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+th{background:var(--sunk);font-size:12.5px;font-weight:600;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.raci{min-width:860px}
+.raci select{padding:5px 6px;text-align:center;font-family:var(--f-mono);font-weight:600;width:72px}
+.raci th input{font-size:12.5px;font-weight:600;padding:5px 7px}
+.raci td.c{text-align:center}
+.pol{min-width:760px}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:6px}
+.x:hover{color:var(--weak);background:var(--weak-wash)}
+
+/* lifecycle */
+.life{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.life div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:4px;background:var(--surface)}
+.life b{font-size:13.5px;line-height:1.3}
+.life .s{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.life .done{border-color:var(--strong)}
+.life .done .s{color:var(--strong)}
+.life .here{background:var(--brass);border-color:var(--brass);color:#12201B}
+.life .here .s{color:#12201B}
+.life .next{border-style:dashed;color:var(--muted)}
+
+/* bars */
+.bars{display:grid;gap:8px}
+.bscale,.brow{display:grid;grid-template-columns:150px minmax(0,1fr) 48px 128px;gap:12px;align-items:center}
+.bscale{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.bscale .ax{position:relative;height:16px}
+.bscale .ax span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.brow .bn{font-weight:600;font-size:14px}
+.track{position:relative;height:10px;background:var(--sunk);border-radius:5px}
+.fill{position:absolute;inset:0 auto 0 0;border-radius:5px}
+.fill.strong{background:var(--strong)} .fill.partial{background:var(--partial)} .fill.weak{background:var(--weak)} .fill.na{background:var(--na)}
+.tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--surface)}
+.bp{font-family:var(--f-mono);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* KPI tiles */
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.tile .v{font-size:28px;font-weight:600;line-height:1.1}
+.tile .k{font-size:12.5px;color:var(--muted)}
+.tile.lead{background:var(--panel);border-color:var(--panel);color:var(--panel-ink)}
+.tile.lead .k{color:var(--panel-muted)}
+.tile.lead .v{font-size:40px;color:var(--brass)}
+
+.list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.list li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:7px}
+.dot.strong{background:var(--strong)} .dot.weak{background:var(--weak)} .dot.partial{background:var(--partial)} .dot.na{border:2px solid var(--na)}
+ol.recs{margin:0;padding-inline-start:22px;display:grid;gap:8px}
+ol.recs li::marker{font-family:var(--f-mono);color:var(--brass-ink);font-weight:600}
+
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.rules .card h3{font-size:16px}
+.legend{width:100%;font-size:13.5px}
+.legend td,.legend th{padding:6px 8px}
+
+.saved li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.newf{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.newf .fld{flex:1 1 260px}
+
+.prog{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.prog span{display:block;height:100%;background:var(--brass)}
+.card.dark .prog{background:var(--panel-line)}
+
+/* report paper */
+.paper{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:44px 52px;max-width:860px;display:grid;gap:12px;font-size:14.5px;line-height:1.6}
+.paper h1{font-family:var(--f-display);font-size:28px;font-weight:600}
+.paper h2{font-size:17px;color:var(--accent);margin-top:10px}
+.paper h3{font-size:15px}
+.paper .meta{color:var(--muted);font-size:13px}
+.paper ul,.paper ol{margin:0;padding-inline-start:22px;display:grid;gap:4px}
+.paper table{font-size:13px}
+.paper td,.paper th{border:1px solid var(--line);vertical-align:top}
+.edit{display:grid;gap:8px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.wc{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.wc.over{color:var(--weak)}
+.note{font-size:13px;color:var(--muted)}
+
+/* discussion */
+.quote{font-family:var(--f-display);font-size:28px;font-weight:600;line-height:1.25;max-width:30ch}
+.pos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.posc{position:relative;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface);cursor:pointer;display:grid;gap:4px}
+.posc input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.posc:has(input:checked){border-color:var(--accent);background:var(--accent-wash)}
+.posc:has(input:focus-visible){outline:2px solid var(--brass);outline-offset:2px}
+.posc b{font-size:14.5px}
+.posc span{font-size:13px;color:var(--muted)}
+details.gp{border-top:1px solid var(--line);padding-block:10px}
+details.gp summary{cursor:pointer;font-weight:600}
+details.gp p{margin-top:8px;max-width:78ch}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel);color:var(--panel-ink);padding:10px 16px;border-radius:10px;font-size:14px;z-index:90;max-width:calc(100% - 32px);opacity:0;pointer-events:none}
+.toast.on{opacity:1}
+
+/* presentation */
+.present{position:fixed;inset:0;z-index:100;background:var(--overlay);display:grid;grid-template-rows:minmax(0,1fr) auto;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.pwrap{display:grid;place-items:center;min-height:0}
+.stage{container-type:inline-size;position:relative;width:min(100%,calc((100dvh - 110px) * 16 / 9));aspect-ratio:16/9;max-width:100%;border-radius:6px;overflow:hidden}
+.pbar{display:flex;justify-content:center;align-items:center;gap:10px;padding-top:12px;color:#C9D3CC;font-family:var(--f-mono);font-size:13px;flex-wrap:wrap}
+.pbar button{background:#1B2823;border:1px solid #2E433A;color:#EEF1EC;border-radius:8px;padding:6px 14px;cursor:pointer}
+
+.sl{position:absolute;inset:0;padding:4.6cqw 5.6cqw 6cqw;display:flex;flex-direction:column;gap:1.8cqw;background:var(--sl-paper);color:var(--sl-ink);font-family:var(--f-body);font-size:1.5cqw;line-height:1.4;overflow:hidden}
+.sl.dk{background:var(--sl-deep);color:var(--sl-deep-ink)}
+.sl.br{background:var(--sl-brass);color:var(--sl-ink)}
+.sl .eb{font-family:var(--f-mono);font-size:1.05cqw;letter-spacing:.2cqw;text-transform:uppercase;color:var(--sl-brass-ink)}
+.sl.dk .eb{color:var(--sl-brass)}
+.sl.br .eb{color:var(--sl-ink)}
+.sl h2{font-family:var(--f-display);font-weight:600;font-size:3.4cqw;line-height:1.1}
+.sl h1{font-family:var(--f-display);font-weight:600;font-size:5.6cqw;line-height:1.05}
+.sl .ft{position:absolute;left:5.6cqw;right:5.6cqw;bottom:2.6cqw;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:1cqw;color:var(--sl-muted)}
+.sl.dk .ft{color:var(--sl-deep-muted)}
+.sl.br .ft{color:#3D3218}
+.sl .g{display:grid;gap:1.2cqw}
+.sl .c{background:var(--sl-card);border:.1cqw solid var(--sl-line);border-radius:1cqw;padding:1.4cqw 1.6cqw;display:grid;gap:.5cqw;align-content:start;min-width:0}
+.sl .c.d{background:var(--sl-deep);color:var(--sl-deep-ink);border-color:var(--sl-deep)}
+.sl .lbl{font-family:var(--f-mono);font-size:.95cqw;letter-spacing:.12cqw;text-transform:uppercase;color:var(--sl-brass-ink)}
+.sl .c.d .lbl{color:var(--sl-brass)}
+.sl .big{font-family:var(--f-display);font-weight:600;font-size:2.2cqw;line-height:1.15}
+.sl .m{color:var(--sl-muted)}
+.sl.dk .m,.sl .c.d .m{color:var(--sl-deep-muted)}
+.sl .pill{display:inline-block;border-radius:99cqw;padding:.15cqw .9cqw;font-size:1.05cqw;font-weight:600;white-space:nowrap}
+.sl .pill.strong{background:var(--sl-green);color:#fff} .sl .pill.partial{background:var(--sl-brass-ink);color:#fff} .sl .pill.weak{background:var(--sl-rust);color:#fff} .sl .pill.na{background:#7C8A84;color:#fff}
+.sl ul,.sl ol{margin:0;padding-left:2cqw;display:grid;gap:.6cqw}
+.sl table{border-collapse:collapse;width:100%;font-size:1.2cqw;background:var(--sl-card)}
+.sl th,.sl td{border:.1cqw solid var(--sl-line);padding:.55cqw .8cqw;text-align:left}
+.sl th{background:#E3E9E4;color:var(--sl-muted)}
+.sl td.cc{text-align:center;font-family:var(--f-mono);font-weight:600}
+.sl .bar{height:.7cqw;background:#D5DDD8;border-radius:.4cqw;position:relative}
+.sl .bar i{position:absolute;inset:0 auto 0 0;border-radius:.4cqw}
+.sl .wm{position:absolute;right:4cqw;top:3cqw;font-family:var(--f-display);font-weight:600;font-size:17cqw;line-height:1;color:#1A2D26}
+.sl .lf{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.8cqw}
+.sl .lf div{border:.15cqw solid var(--sl-line);border-radius:.8cqw;padding:.9cqw 1cqw;display:grid;gap:.3cqw;font-size:1.25cqw;font-weight:600}
+.sl .lf .done{border-color:var(--sl-green)} .sl .lf .here{background:var(--sl-brass);border-color:var(--sl-brass)} .sl .lf .next{border-style:dashed;color:var(--sl-muted)}
+
+@media (max-width:1100px){
+  .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pos{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:920px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:18px;padding-block:16px 60px}
+  .rail{position:static;display:flex;overflow-x:auto;max-height:none;gap:6px;padding-bottom:6px}
+  .st{flex:none;grid-template-columns:auto auto auto;border:1px solid var(--line);background:var(--surface)}
+  .st .lb small{display:none}
+  .rules,.grid3{grid-template-columns:minmax(0,1fr)}
+  .life{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pnav{top:calc(env(safe-area-inset-top,0px) + 96px)}
+}
+@media (max-width:640px){
+  .sh h1{font-size:28px}
+  .fields,.grid2{grid-template-columns:minmax(0,1fr)}
+  .shr{grid-template-columns:minmax(0,1fr)}
+  .evrow{grid-template-columns:minmax(0,1fr)}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bscale,.brow{grid-template-columns:110px minmax(0,1fr) 40px;}
+  .brow .chip,.bscale .sp{display:none}
+  .life{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pos{grid-template-columns:minmax(0,1fr)}
+  .paper{padding:24px 18px}
+  .quote{font-size:22px}
+  .pnav{position:static}
+}
+@media (prefers-reduced-motion:no-preference){
+  .toast{transition:opacity .2s}
+  .fill{transition:width .3s}
+  .st,.btn,.opt span{transition:background-color .15s,border-color .15s,color .15s}
+}
+</style>
+
+<div id="app" class="show-ar">
+  <header class="top gutter"><div class="top-in">
+    <a class="brand" href="#brief" aria-label="IT Governance Diagnostic Kit: start"><span class="m">IT Governance Diagnostic Kit</span><span class="n">ISO/IEC 38500</span></a>
+    <div class="co">
+      <label for="coSel" class="sr">Current assessment</label>
+      <select id="coSel"></select>
+      <span id="saveState" class="save" aria-live="polite"></span>
+    </div>
+    <div class="acts">
+      <label class="tog" for="arTog"><input type="checkbox" id="arTog" checked> شرح عربي</label>
+      <button class="btn" type="button" data-act="gonew">New assessment</button>
+      <button class="btn pri" type="button" data-act="present">Present</button>
+    </div>
+  </div></header>
+  <div class="banner gutter" id="sampleBanner" hidden><div class="in">
+    <span><b>Example data.</b> Delta Coast Developments is a fictional company, loaded to show how the kit works.</span>
+    <button class="linkbtn" type="button" data-act="gonew">Start an assessment for your organization</button>
+  </div></div>
+  <div class="shell gutter">
+    <nav class="rail" id="rail" aria-label="Diagnostic steps"></nav>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<div class="present" id="present" hidden role="dialog" aria-modal="true" aria-label="Presentation">
+  <div class="pwrap"><div class="stage" id="stage"></div></div>
+  <div class="pbar">
+    <button type="button" data-act="pprev" aria-label="Previous slide">← Prev</button>
+    <span id="pcount">1 / 1</span>
+    <button type="button" data-act="pnext" aria-label="Next slide">Next →</button>
+    <button type="button" data-act="pfull">Full screen</button>
+    <button type="button" data-act="pclose">Close (Esc)</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+
+<script>
+(function(){
+"use strict";
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-5);
+const isNum=k=>/^\d+$/.test(k);
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fmtDate=d=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||"");return m?`${+m[3]} ${MON[+m[2]-1]} ${m[1]}`:(d||"");};
+const listJoin=a=>a.length<2?(a[0]||""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];
+const slug=s=>(String(s||"assessment").toLowerCase().replace(/\(example\)/,"").replace(/[^a-z0-9؀-ۿ]+/g,"-").replace(/^-|-$/g,"")||"assessment");
+const lc=s=>String(s||"").charAt(0).toLowerCase()+String(s||"").slice(1);
+const plural=(n,w)=>`${n} ${w}${n===1?"":"s"}`;
+
+/* ============ content ============ */
+const ANS=[{v:3,l:"Yes, documented"},{v:2,l:"Partly"},{v:1,l:"Informal only"},{v:0,l:"No"},{v:-1,l:"Don’t know"}];
+const BASIS=[{k:"",l:"Evidence basis…"},{k:"doc",l:"Document seen"},{k:"obs",l:"Observed in practice"},{k:"told",l:"Told (verbal only)"}];
+const RL={strong:"Strong",partial:"Partial",weak:"Weak",na:"Not enough evidence"};
+
+const PR=[
+{k:"resp",n:1,name:"Responsibility",slide:47,
+ def:"Individuals and groups understand and accept their responsibilities for both the supply of and demand for IT, and those responsible have the authority to act.",
+ ar:"المسؤولية لازم تكون واضحة ومقبولة، ومعاها صلاحية التنفيذ. ويشمل ده جانب الـ Supply (قسم الـ IT) وجانب الـ Demand (الإدارات اللي بتطلب وبتستخدم).",
+ qs:[
+ {id:"r1",en:"IT roles and responsibilities (IT head, IT team) are formally defined in writing.",ar:"أدوار ومسؤوليات الـ IT مكتوبة رسمياً؟ زي Job descriptions أو هيكل معتمد.",s:"IT roles and responsibilities are formally defined",w:"IT roles and responsibilities are not formally defined",rec:"Document IT roles and responsibilities and have senior management approve them"},
+ {id:"r2",en:"Business units’ IT responsibilities are defined: requesting changes, owning their data, user conduct.",ar:"مسؤوليات الإدارات تجاه الـ IT واضحة؟ مين صاحب بيانات المبيعات والعملاء؟ مين بيطلب التعديلات؟",s:"Business units’ responsibilities for IT demand and data are defined",w:"Business units’ IT duties and data ownership are undefined",rec:"Name a business owner for each key system and data set (sales, customers, finance)"},
+ {id:"r3",en:"People who carry IT responsibility also hold the authority to act on it.",ar:"اللي عليه المسؤولية معاه الصلاحية؟ ولا مسؤول من غير سلطة؟",s:"IT responsibility is matched with the authority to act",w:"IT responsibility is not matched with the authority to act",rec:"Match authority to responsibility through a written delegation of authority"},
+ {id:"r4",en:"Decision rights for major IT decisions are documented (a RACI or delegation-of-authority matrix).",ar:"فيه مستند بيحدد مين بيقرر في قرارات الـ IT الكبيرة؟ زي RACI أو مصفوفة صلاحيات.",s:"Decision rights for major IT decisions are documented",w:"Decision rights for major IT decisions are not documented",rec:"Publish a RACI that names one accountable owner for each key IT decision"}]},
+{k:"strat",n:2,name:"Strategy",slide:48,
+ def:"Business strategy takes current and future IT capabilities into account, and IT plans meet the current and ongoing needs of the business strategy.",
+ ar:"استراتيجية البيزنس لازم تاخد الـ IT في حسابها، وخطة الـ IT لازم تخدم خطة البيزنس. التقنية Strategic enabler مش حاجة بتتركب في الآخر.",
+ qs:[
+ {id:"s1",en:"A documented IT strategy or multi-year IT plan exists.",ar:"فيه خطة IT مكتوبة لسنة أو أكتر؟",s:"A documented IT strategy exists",w:"There is no documented IT strategy",rec:"Write a short IT strategy for the next one to three years, derived from business priorities"},
+ {id:"s2",en:"The IT plan is explicitly linked to business strategy and reviewed with business leaders.",ar:"خطة الـ IT مربوطة بخطة البيزنس وبتتراجع مع مديري الإدارات؟",s:"IT plans are linked to business strategy",w:"IT plans are not linked to business strategy",rec:"Review the IT plan against business objectives with business leaders every year"},
+ {id:"s3",en:"IT is consulted early when new business initiatives are planned.",ar:"لما الإدارة تخطط لمشروع أو فرع أو نظام جديد، الـ IT بيتسأل من الأول؟",s:"IT is involved early in business initiatives",w:"IT is brought in after business decisions are made",rec:"Involve IT at the start of planning for every business initiative"},
+ {id:"s4",en:"A forum (IT steering committee or equivalent) sets IT priorities across the organization.",ar:"فيه IT Steering Committee أو اجتماع دوري بيحدد أولويات الـ IT؟",s:"An IT steering forum sets priorities",w:"No forum sets IT priorities across the organization",rec:"Form an IT steering committee that meets quarterly and keeps minutes"}]},
+{k:"acq",n:3,name:"Acquisition",slide:49,
+ def:"IT acquisitions are made for valid reasons, on appropriate and ongoing analysis, with clear and transparent decision-making that balances short-term costs and benefits against long-term objectives.",
+ ar:"أي شراء أو بناء أو ترقية كبيرة لازم يكون له سبب وتحليل، وصلاحية اعتماد واضحة، مش شراء عشوائي Ad hoc.",
+ qs:[
+ {id:"a1",en:"Major IT purchases require a written business case (costs, benefits, risks, alternatives).",ar:"أي شراء IT كبير له Business case مكتوب فيه التكلفة والمنفعة والمخاطر والبدائل؟",s:"Major IT purchases are supported by business cases",w:"Major IT purchases lack a written business case",rec:"Adopt a one-page business case for IT purchases above a set threshold"},
+ {id:"a2",en:"Approval authority and spending thresholds for IT acquisitions are defined.",ar:"حدود الصرف وصلاحيات الموافقة على مشتريات الـ IT محددة؟ (مين يوافق على كام)",s:"Approval authority and spending thresholds for IT are defined",w:"Approval authority and spending thresholds for IT are undefined",rec:"Define spending thresholds and named approvers for IT acquisitions"},
+ {id:"a3",en:"Acquisitions weigh long-term fit (total cost of ownership, scalability, vendor lock-in), not only price.",ar:"عند الشراء بتبصوا على TCO والتوسع والاعتماد على مورد واحد، مش السعر بس؟",s:"Acquisitions weigh total cost and long-term fit",w:"Acquisitions favor short-term price over long-term fit",rec:"Compare total cost of ownership and lock-in risk for every major acquisition"},
+ {id:"a4",en:"Post-implementation reviews check whether promised benefits were realised.",ar:"بعد تنفيذ أي نظام بتراجعوا المنافع اللي اتوعدتوا بيها اتحققت ولا لأ؟",s:"Benefits are reviewed after implementation",w:"No post-implementation benefit reviews take place",rec:"Run a post-implementation review three to six months after each major IT project"}]},
+{k:"perf",n:4,name:"Performance",slide:50,
+ def:"IT is fit for purpose, providing the services, service levels and quality the business needs now and in future. Performance is measured against agreed objectives, not assumed.",
+ ar:"الأداء لازم يتقاس على أهداف متفق عليها، مش يتفترض. والمتابعة تكون دورية مش رد فعل لما حاجة تقع.",
+ qs:[
+ {id:"p1",en:"IT performance is measured against agreed KPIs or service levels (SLAs).",ar:"فيه KPIs أو SLA متفق عليها للـ IT؟ زي نسبة التشغيل ووقت حل المشاكل.",s:"IT performance is measured against agreed KPIs",w:"No agreed KPIs or service levels exist for IT",rec:"Agree five to eight IT KPIs (availability, response time, project delivery) with management"},
+ {id:"p2",en:"IT performance and issues are reported to senior management on a regular cadence.",ar:"فيه تقرير دوري منتظم من الـ IT للإدارة العليا؟",s:"IT reports to senior management on a regular cadence",w:"IT reporting to senior management is irregular",rec:"Set a fixed monthly or quarterly IT reporting cadence"},
+ {id:"p3",en:"Availability, incidents and user satisfaction are monitored.",ar:"بتتابعوا توقف الأنظمة والأعطال ورضا المستخدمين؟ زي سجل Helpdesk tickets.",s:"Availability, incidents and user satisfaction are monitored",w:"Availability, incidents and user satisfaction are not monitored",rec:"Log incidents in a ticketing tool and report availability monthly"},
+ {id:"p4",en:"Performance problems trigger planned corrective action before failures occur.",ar:"لما الأداء يقل بتتعمل خطة تصحيح؟ ولا بنتحرك بس لما حاجة تقع؟",s:"Performance issues trigger planned corrective action",w:"IT reacts to failures instead of managing performance",rec:"Review KPI trends and agree corrective actions in every reporting cycle"}]},
+{k:"conf",n:5,name:"Conformance",slide:51,
+ def:"IT complies with all mandatory legislation and regulations, internal policies, contracts and standards, with documented evidence of compliance rather than informal assurance.",
+ ar:"الالتزام بالقوانين واللوائح والسياسات الداخلية والعقود، ومعاه دليل موثق للمراجعة. «إحنا ملتزمين» من غير ورقة مش كفاية.",
+ qs:[
+ {id:"c1",en:"IT policies are documented and formally approved by senior management or the board.",ar:"سياسات الـ IT مكتوبة ومعتمدة رسمياً بتوقيع الإدارة العليا أو المجلس؟",s:"IT policies are documented and formally approved",w:"IT policies are not formally approved",rec:"Have senior management formally approve every IT policy"},
+ {id:"c2",en:"Applicable laws and regulations are identified and mapped to owners (data protection, e-invoicing, sector rules).",ar:"القوانين اللي تخص الشركة متحددة ولكل واحد مسؤول؟ زي قانون حماية البيانات 151 والفاتورة الإلكترونية.",s:"Applicable IT-related laws are identified and owned",w:"Applicable IT-related laws are not mapped to owners",rec:"Build a compliance register that maps each law to an owner and its controls"},
+ {id:"c3",en:"Documented evidence of compliance is kept for audit (logs, approvals, access reviews).",ar:"فيه أدلة محفوظة على الالتزام؟ سجلات وموافقات ومراجعات صلاحيات.",s:"Compliance evidence is kept for audit",w:"Little documented compliance evidence is kept",rec:"Keep approvals, access reviews and logs as audit evidence"},
+ {id:"c4",en:"IT controls are reviewed by internal or external audit.",ar:"المراجع الداخلي أو الخارجي بيراجع ضوابط الـ IT؟ ولا الحسابات بس؟",s:"IT controls are independently audited",w:"IT controls are not independently audited",rec:"Ask internal or external audit to include IT general controls in scope"}]},
+{k:"human",n:6,name:"Human Behavior",slide:52,
+ def:"IT policies, practices and decisions respect human behavior and the current and evolving needs of all the people in the process.",
+ ar:"أي سياسة مثالية فنياً بتفشل لو تجاهلت إزاي الناس بتتصرف. التوعية وإدارة التغيير والتواصل جزء من الحوكمة.",
+ qs:[
+ {id:"h1",en:"Staff receive IT policy and security awareness training.",ar:"الموظفين بياخدوا توعية بسياسات الـ IT والأمن؟",s:"Staff receive IT and security awareness training",w:"Staff receive no formal IT awareness training",rec:"Run short awareness sessions when policies are approved, then yearly"},
+ {id:"h2",en:"Users are consulted and prepared when systems or policies change.",ar:"لما نظام أو سياسة تتغير، المستخدمين بيتسألوا وبيتجهزوا؟",s:"Users are consulted and prepared for change",w:"Changes reach users without consultation",rec:"Consult key users and plan training for every major change"},
+ {id:"h3",en:"Rules are practical, so people follow them instead of working around them (little shadow IT).",ar:"القواعد عملية والناس بتلتزم؟ ولا فيه Shadow IT: برامج وحسابات بعيد عن الـ IT؟",s:"Rules are practical and shadow IT is limited",w:"Workarounds and shadow IT are common",rec:"Simplify impractical rules and offer approved alternatives to shadow IT"},
+ {id:"h4",en:"People can raise IT concerns and escalate issues without fear.",ar:"الموظف يقدر يبلّغ عن مشكلة أو مخالفة IT من غير ما يخاف؟",s:"People can raise IT concerns openly",w:"There is no safe way to raise IT concerns",rec:"Create a clear, safe channel for raising IT concerns"}]}
+];
+const GOVQ=[
+ {id:"g1",en:"There is a clear separation between who decides IT direction and who executes it.",ar:"فيه فصل واضح بين مين بيقرر اتجاه الـ IT ومين بينفذ؟",s:"Deciding and executing IT are clearly separated",w:"The same people decide and execute IT matters",rec:"Separate IT direction-setting (governance) from IT delivery (management)"},
+ {id:"g2",en:"The board or owners set IT risk appetite and approve major IT direction.",ar:"المجلس أو الملاك بيحددوا حدود المخاطرة في الـ IT ويعتمدوا الاتجاه العام؟",s:"The governing body sets IT direction and risk appetite",w:"No governing body sets IT direction or risk appetite",rec:"Have the board or owners approve an IT risk appetite statement"},
+ {id:"g3",en:"Management reports actual performance and emerging risks back to the governing level.",ar:"الإدارة بترفع الأداء والمخاطر الجديدة للمستوى الأعلى عشان يعدّل الاتجاه؟ (Feedback loop)",s:"Management reports performance and risks upward",w:"No feedback loop from management to the governing level",rec:"Report IT performance and top risks to the governing level every quarter"},
+ {id:"g4",en:"Documented interfaces link the two layers (committee terms of reference, reporting calendar).",ar:"فيه واجهات موثقة بين الحوكمة والإدارة؟ لجنة لها لائحة وجدول تقارير.",s:"Interfaces between governance and management are documented",w:"Interfaces between governance and management are undocumented",rec:"Write terms of reference for the IT steering committee and a reporting calendar"}
+];
+const ACCQ=[
+ {id:"m1",en:"Structured, periodic IT reporting reaches the board or owners (dashboards, risk reports, project status).",ar:"فيه تقارير IT منظمة بتوصل للمجلس أو الملاك؟",s:"IT reporting reaches the governing level",w:"IT reporting does not reach the board or owners",rec:"Send a quarterly IT summary to the board or owners"},
+ {id:"m2",en:"A decision log records who approved what, when and why.",ar:"فيه سجل قرارات: مين وافق على إيه، وإمتى، وليه؟",s:"IT decisions are logged with who, when and why",w:"No decision log exists for IT approvals",rec:"Keep an IT decision log: who approved what, when and why"},
+ {id:"m3",en:"An IT risk register is maintained and reviewed.",ar:"فيه Risk register للـ IT بيتحدث وبيتراجع؟",s:"An IT risk register is maintained",w:"No IT risk register exists",rec:"Start an IT risk register with owners and review dates"},
+ {id:"m4",en:"Incidents and project failures get a documented post-mortem.",ar:"بعد أي حادث أو مشروع فاشل بيتكتب Post-mortem؟",s:"Incidents and failures get documented post-mortems",w:"Incidents and failures are not reviewed formally",rec:"Write a short post-mortem after every major incident or failed project"},
+ {id:"m5",en:"Escalation and whistleblower channels let issues surface when normal reporting fails.",ar:"فيه قنوات تصعيد أو إبلاغ سري لو خطوط التقارير العادية فشلت؟",s:"Escalation and whistleblower channels exist",w:"No formal escalation or whistleblower channel exists",rec:"Publish an escalation path and a confidential reporting channel"},
+ {id:"m6",en:"Relevant incidents are disclosed to the right stakeholders at the right time.",ar:"الحوادث المهمة بتتبلّغ للناس الصح في الوقت الصح؟ (الشفافية مش معناها نكشف كل حاجة)",s:"Incidents are disclosed to the right stakeholders",w:"Incident disclosure to stakeholders is undefined",rec:"Define who must be told about which incidents, and how fast"}
+];
+const ALLQ=[].concat(
+  ...PR.map(p=>p.qs.map(q=>Object.assign({},q,{lens:p.name,pk:p.k}))),
+  GOVQ.map(q=>Object.assign({},q,{lens:"Governance vs. management",pk:"gov"})),
+  ACCQ.map(q=>Object.assign({},q,{lens:"Accountability",pk:"acc"})));
+
+const SH_IN=[
+ {k:"board",l:"Board of Directors / owners",d:"Sets direction and risk appetite; approves major policies and investments; oversees through reporting."},
+ {k:"exec",l:"Senior / executive management",d:"Turns direction into plans; allocates budget and people; reports back to the board."},
+ {k:"cio",l:"CIO / IT head",d:"Bridges business and technology; executes IT strategy within approved limits."},
+ {k:"itlead",l:"IT leadership team",d:"Runs projects, operations and service delivery; implements policies; escalates risks."},
+ {k:"bu",l:"Business unit managers",d:"Request and use IT; own business processes and their information."},
+ {k:"emp",l:"Employees",d:"Follow IT policies; their behavior decides whether controls work."}];
+const SH_EX=[
+ {k:"sh",l:"Shareholders / investors",d:"Return on investment and protection of capital."},
+ {k:"reg",l:"Regulators",d:"Enforce data protection, financial and sector-specific laws."},
+ {k:"aud",l:"External auditors",d:"Independently assess governance and internal controls."},
+ {k:"ven",l:"Vendors and technology partners",d:"Shape the technology value chain; bring third-party risk."},
+ {k:"cus",l:"Customers",d:"Expect transparency about how their data is governed."}];
+const LV_IN=["Not involved","Informed","Consulted","Decides"];
+const LV_EX=["Not relevant","Watches","Influences","Sets rules"];
+
+const DEF_ROLES=["Board / owners","CEO / GM","CIO / IT head","Business units","IT team"];
+const DEF_DEC=["Approve IT strategy","Approve a major IT investment","Approve IT policies","Accept or defer an IT risk","Approve scope change on an IT project","Select IT vendors","Respond to a security incident"];
+const RACI_OPTS=["","R","A","A/R","C","I","?"];
+const RACI_ST={clear:["Clear","strong"],noA:["No accountable owner","weak"],multiA:["Accountability split","weak"],unclear:["Not formally defined","partial"],noR:["No one does the work","partial"],unmapped:["Not mapped","na"]};
+
+const POLDEF=["Acceptable Use Policy (AUP)","Information Security Policy","Data Classification & Protection","Access Control","Password & Authentication","Backup & Restore","Business Continuity / Disaster Recovery","Bring Your Own Device (BYOD)","Email & Internet Use","Incident Response","Change Management","Third-party / Vendor Management"];
+const PST=[{v:0,l:"None",c:"weak"},{v:1,l:"Informal (unwritten)",c:"weak"},{v:2,l:"Drafted, not approved",c:"partial"},{v:3,l:"Approved",c:"partial"},{v:4,l:"Approved & communicated",c:"strong"},{v:5,l:"Enforced & reviewed",c:"strong"}];
+const LIFE=["Identify need","Draft","Review & approval","Communicate & train","Enforce","Monitor & update"];
+const COMP=[{k:"purpose",l:"Purpose statement"},{k:"scope",l:"Scope"},{k:"statements",l:"Policy statements"},{k:"roles",l:"Roles & responsibilities"},{k:"enforce",l:"Enforcement & compliance"},{k:"exceptions",l:"Exceptions process"},{k:"review",l:"Review & update cycle"}];
+
+const DC=[
+ {k:"dc1",q:"Who holds formal decision rights for major IT projects and investments?",ar:"مين عنده صلاحية القرار الرسمية في مشاريع واستثمارات الـ IT الكبيرة؟ اطلب المستند."},
+ {k:"dc2",q:"Does an independent IT governance committee or steering group exist?",ar:"فيه لجنة حوكمة IT أو Steering group مستقلة؟ لو فيه، اطلب اللائحة ومحاضر الاجتماعات."},
+ {k:"dc3",q:"How does the organization respond to security incidents or project failures? Is there a documented post-mortem process?",ar:"بتتعاملوا إزاي مع الحوادث الأمنية أو فشل المشاريع؟ فيه Post-mortem مكتوب؟"},
+ {k:"dc4",q:"What monitoring, reporting and escalation mechanisms are used in practice, versus what exists only on paper?",ar:"إيه آليات المتابعة والتقارير والتصعيد المستخدمة فعلاً، مقابل اللي على الورق بس؟"}];
+const SRC_TYPES=["Interview","Document","Observation","Public source"];
+
+const SECTORS=["Real estate & construction","Tourism & hospitality","Banking & financial services","Insurance","Healthcare","Education","Government / public sector","Manufacturing","Retail & trade","Telecom & technology","Logistics & transport","Energy & utilities","Research / scientific","NGO / non-profit","Other"];
+const SIZES=["Under 50","50–249","250–999","1,000–4,999","5,000 or more"];
+const OWN=["Family-owned private company","Private company (partners)","Public shareholding company (listed)","Group / holding with subsidiaries","Government-owned or public body","State-owned enterprise","Multinational subsidiary","Non-profit","Other"];
+const REPORTS=["CEO / General Manager","CFO / Finance","COO / Operations","Board or Chairman directly","Other"];
+const AROLE=["Employee (insider view)","Manager in the organization","External consultant","Student (external view)","Other"];
+const REGS=[{k:"pdpl",l:"Personal Data Protection Law 151/2020 (Egypt)",ref:"Law No. 151 of 2020 on the Protection of Personal Data (Egypt)."},{k:"eta",l:"Tax Authority e-invoicing / e-receipt",ref:"Egyptian Tax Authority, e-invoicing and e-receipt systems."},{k:"fin",l:"Financial regulator rules (CBE / FRA)",ref:""},{k:"sector",l:"Sector-specific rules",ref:""},{k:"contract",l:"Contractual obligations",ref:""}];
+
+const GP=[
+ {t:"Is the board responsible, having approved the investment and set the risk appetite?",en:"The board answers for the quality of its approval decision and for the risk appetite it set, and for overseeing the investment through reporting. It does not answer for day-to-day delivery.",ar:"المجلس مسؤول عن قرار الموافقة نفسه وحدود المخاطرة اللي حطها والرقابة، مش عن التنفيذ اليومي."},
+ {t:"Is executive management responsible for translating strategy into execution and overseeing delivery?",en:"Executive management answers for turning the strategy into a funded plan, choosing the people and resources, and overseeing delivery.",ar:"الإدارة التنفيذية مسؤولة عن ترجمة الاستراتيجية لخطة ممولة، واختيار الموارد، ومتابعة التنفيذ."},
+ {t:"Is the CIO responsible as the direct technical and operational owner?",en:"The CIO answers for delivery within the approved scope, budget and risk limits, and for escalating problems early. A CIO without decision authority cannot carry the whole outcome.",ar:"الـ CIO مسؤول عن التنفيذ الفني جوه الحدود المعتمدة وعن التصعيد بدري. بس لو مالوش صلاحية القرار، مينفعش يشيل النتيجة كلها."},
+ {t:"Should accountability be shared, and how is that structured without diluting it?",en:"Share it by decision, not by outcome. Each decision (approve, fund, change scope, accept a risk, deliver) has exactly one accountable owner in a RACI, so sharing never becomes “everyone and no one”.",ar:"المساءلة المشتركة تنفع لو اتقسمت حسب القرار: كل قرار له A واحد في الـ RACI. غير كده تبقى «الكل مسؤول يعني محدش مسؤول»."},
+ {t:"How does the ISO/IEC 38500 Responsibility principle help in practice?",en:"It requires responsibility to be assigned, understood and accepted, and matched with authority. Ask who held the authority for each decision that led to the failure; that person or body answers for that decision.",ar:"مبدأ Responsibility بيقول: المسؤولية لازم تكون متحددة ومقبولة ومعاها سلطة. اسأل مين كان عنده صلاحية كل قرار أدى للفشل، هو اللي يتحاسب عليه."}];
+const POS=[{k:"board",l:"The board",d:"Approved it and set the risk appetite"},{k:"exec",l:"Executive management",d:"Planned, funded and oversaw delivery"},{k:"cio",l:"The CIO",d:"Owned technical delivery"},{k:"layered",l:"Shared, by decision",d:"One accountable owner per decision"}];
+
+const STEPS=[
+ {k:"brief",l:"Start",ref:"Slide 59 · Practical activity"},
+ {k:"profile",l:"Organization",ref:"Slide 62 · Req. 1"},
+ {k:"stakeholders",l:"Stakeholders",ref:"Slides 34–38 · Req. 2"},
+ {k:"raci",l:"Decision rights",ref:"Slide 43 · RACI"},
+ {k:"policies",l:"IT policies",ref:"Slides 6–10 · Req. 3"},
+ {k:"principles",l:"Six principles",ref:"Slides 45–52 · Req. 4"},
+ {k:"separation",l:"Governance vs. management",ref:"Slides 16–21"},
+ {k:"accountability",l:"Accountability",ref:"Slides 54–57"},
+ {k:"evidence",l:"Evidence log",ref:"Slide 61 · Sources"},
+ {k:"discussion",l:"Executive discussion",ref:"Slide 58"},
+ {k:"results",l:"Results",ref:"Req. 4 and 5"},
+ {k:"report",l:"Report & export",ref:"Slides 62–63"}];
+
+/* ============ state ============ */
+function blank(name){return{v:1,id:uid(),created:Date.now(),updated:Date.now(),sample:false,
+ org:{name:name||"",sector:"",employees:"",sites:"",ownership:"",group:"",business:"",itHead:"",itTeam:"",itReports:"",systems:"",regs:[],regsOther:"",assessor:"",assessorRole:"",date:today()},
+ sh:{},raci:{roles:DEF_ROLES.slice(),rows:DEF_DEC.map(d=>({d,c:["","","","",""]}))},
+ pol:POLDEF.map(n=>({name:n,status:null,owner:"",ref:""})),comp:{},
+ ans:{},dc:{},src:[],disc:{pos:"",text:""},txt:{summary:"",reflection:""}};}
+function makeSample(){
+ const s=blank("Delta Coast Developments (example)");s.sample=true;
+ Object.assign(s.org,{sector:"Real estate & construction",employees:"250–999",sites:"Head office and three project sites",ownership:"Family-owned private company",group:"Parent of two project companies and a facility-management firm",business:"Develops and sells residential and resort units, and manages completed compounds.",itHead:"IT Manager",itTeam:"6",itReports:"CEO / General Manager",systems:"ERP (finance, sales), in-house CRM, Microsoft 365",regs:["pdpl","eta"],assessor:"Example assessor",assessorRole:"Employee (insider view)",date:"2026-10-28"});
+ s.sh={board:{who:"Chairman and family shareholders",level:1},exec:{who:"General Manager",level:3},cio:{who:"IT Manager",level:2},itlead:{who:"IT team (6 people)",level:1},bu:{who:"Sales, Finance, Projects and HR managers",level:2},emp:{who:"About 400 staff",level:1},sh:{who:"Family shareholders",level:1},reg:{who:"Tax Authority; Personal Data Protection Center",level:3},aud:{who:"External financial auditor",level:1},ven:{who:"ERP partner, ISP, hardware suppliers",level:2},cus:{who:"Unit buyers and residents",level:1}};
+ const A=(a,b,ev)=>({a,b,ev:ev||""});
+ s.ans={r1:A(3,"doc","IT job descriptions on the HR file (2022)"),r2:A(1,"obs"),r3:A(2,"told"),r4:A(0,"doc","No authority matrix found"),
+ s1:A(0,"obs"),s2:A(0,"obs"),s3:A(1,"obs"),s4:A(0,"obs"),
+ a1:A(1,"obs"),a2:A(3,"doc","Delegation-of-authority memo, 2024"),a3:A(2,"told"),a4:A(0,"obs"),
+ p1:A(1,"obs"),p2:A(3,"doc","Monthly IT report to the GM"),p3:A(2,"doc","Helpdesk ticket log"),p4:A(1,"told"),
+ c1:A(2,"doc","Four policies drafted, unsigned"),c2:A(1,"told"),c3:A(1,"obs"),c4:A(-1,""),
+ h1:A(0,"obs"),h2:A(2,"obs"),h3:A(1,"obs"),h4:A(-1,""),
+ g1:A(1,"obs"),g2:A(0,"obs"),g3:A(2,"doc","Monthly IT report"),g4:A(0,"obs"),
+ m1:A(0,"obs"),m2:A(0,"obs"),m3:A(0,"obs"),m4:A(1,"told"),m5:A(-1,""),m6:A(1,"told")};
+ const R=(d,c)=>({d,c});
+ s.raci.rows=[R("Approve IT strategy",["?","?","R","",""]),R("Approve a major IT investment",["I","A","R","C","I"]),R("Approve IT policies",["","?","R","",""]),R("Accept or defer an IT risk",["","?","R","?",""]),R("Approve scope change on an IT project",["","A","R","C",""]),R("Select IT vendors",["","A","R","C","C"]),R("Respond to a security incident",["","I","A","I","R"])];
+ [2,2,0,1,2,1,0,0,2,1,0,0].forEach((v,i)=>{s.pol[i].status=v;if(v>=1)s.pol[i].owner="IT Manager";});
+ s.pol[0].ref="Draft v0.3 (2025)";s.pol[1].ref="Draft (2025)";s.pol[4].ref="Draft; partly enforced in Active Directory";s.pol[8].ref="Draft (2025)";
+ s.comp={purpose:true,scope:true,statements:true,roles:true};
+ s.dc={dc1:{text:"The GM approves IT spending above an approved threshold. Nothing written covers policy approval or risk acceptance.",b:"obs"},dc2:{text:"No steering group. IT topics go to the GM’s weekly meeting when needed.",b:"obs"},dc3:{text:"Incidents are fixed and closed in the helpdesk; no written post-mortem.",b:"doc"},dc4:{text:"The monthly IT report is used in practice; escalation happens by phone.",b:"told"}};
+ s.src=[{type:"Document",name:"Monthly IT report, September 2026",role:"IT Manager",date:"Oct 2026",note:""},{type:"Interview",name:"Finance Manager",role:"Business unit",date:"Oct 2026",note:"Approval thresholds"},{type:"Document",name:"Draft IT policies (4)",role:"IT department",date:"2025",note:"Unsigned drafts"}];
+ s.disc={pos:"layered",text:""};
+ return s;}
+
+const LSK="govlens38500:v1";
+let STORE={cur:null,list:{}},S=null,saveT=null,DL=null,docxP=null;
+function normalize(s){const b=blank(s.org&&s.org.name);for(const k in b){if(s[k]==null)s[k]=b[k];}
+ for(const k in b.org){if(s.org[k]==null)s.org[k]=b.org[k];}
+ if(!Array.isArray(s.org.regs))s.org.regs=[];if(!s.raci.rows)s.raci=b.raci;if(!Array.isArray(s.pol))s.pol=b.pol;if(!Array.isArray(s.src))s.src=[];
+ s.raci.rows.forEach(r=>{while(r.c.length<s.raci.roles.length)r.c.push("");});return s;}
+function loadStore(){
+ try{const raw=localStorage.getItem(LSK);if(raw){const o=JSON.parse(raw);if(o&&o.list&&Object.keys(o.list).length)STORE=o;}}catch(e){}
+ if(!STORE.list||!Object.keys(STORE.list).length){const s=makeSample();STORE={cur:s.id,list:{[s.id]:s}};}
+ Object.values(STORE.list).forEach(normalize);
+ if(!STORE.list[STORE.cur])STORE.cur=Object.keys(STORE.list)[0];
+ S=STORE.list[STORE.cur];}
+function setSave(st){const el=$("#saveState");el.className="save"+(st==="fail"?" fail":"");el.textContent=st==="saving"?"Saving…":st==="fail"?"Not saved here: export a file to keep your work":"Saved in this browser";}
+function persist(){try{localStorage.setItem(LSK,JSON.stringify(STORE));setSave("saved");}catch(e){setSave("fail");}}
+function touch(){S.updated=Date.now();setSave("saving");clearTimeout(saveT);saveT=setTimeout(persist,350);}
+function setPath(path,val){const ks=path.split(".");let o=S;for(let i=0;i<ks.length-1;i++){const k=isNum(ks[i])?+ks[i]:ks[i];if(o[k]==null||typeof o[k]!=="object")o[k]={};o=o[k];}const l=ks[ks.length-1];o[isNum(l)?+l:l]=val;}
+function getPath(path){return path.split(".").reduce((o,k)=>o==null?undefined:o[isNum(k)?+k:k],S);}
+
+/* ============ scoring ============ */
+function eff(q){const r=S.ans[q.id];if(!r||r.a==null)return null;if(r.a<0)return -1;return(r.a===3&&r.b!=="doc")?2:r.a;}
+function scoreSet(qs){let sum=0,n=0,unk=0,ans=0;qs.forEach(q=>{const v=eff(q);if(v===null)return;ans++;if(v<0){unk++;return;}sum+=v;n++;});
+ const pct=n?Math.round(sum/(3*n)*100):null;const rating=(n<Math.ceil(qs.length/2))?"na":pct>=70?"strong":pct>=40?"partial":"weak";return{pct,n,unk,ans,total:qs.length,rating};}
+function raciStatus(r){const c=r.c;if(!c.some(x=>x))return{s:"unmapped",A:[],R:[]};const A=[],R=[];let q=false;
+ c.forEach((x,i)=>{if(x==="A"||x==="A/R")A.push(i);if(x==="R"||x==="A/R")R.push(i);if(x==="?")q=true;});
+ if(q)return{s:"unclear",A,R};if(!A.length)return{s:"noA",A,R};if(A.length>1)return{s:"multiA",A,R};if(!R.length)return{s:"noR",A,R};return{s:"clear",A,R};}
+function polStats(){const a=S.pol.filter(p=>p.status!=null),ex=a.filter(p=>p.status>=1);
+ const srt=ex.map(p=>p.status).sort((x,y)=>x-y);const med=srt.length?srt[Math.floor((srt.length-1)/2)]:null;
+ const stage=med==null?(a.length?0:null):({1:0,2:1,3:2,4:3,5:5})[med];
+ return{assessed:a.length,total:S.pol.length,exist:ex.length,written:a.filter(p=>p.status>=2).length,approved:a.filter(p=>p.status>=3).length,drafted:a.filter(p=>p.status===2).length,informal:a.filter(p=>p.status===1).length,none:a.filter(p=>p.status===0).length,med,stage,comp:COMP.filter(c=>S.comp[c.k]).length};}
+function roleName(i){return S.raci.roles[i]||("Role "+(i+1));}
+function metrics(){
+ const pr={};PR.forEach(p=>pr[p.k]=scoreSet(p.qs));
+ const rated=PR.filter(p=>pr[p.k].rating!=="na");
+ const idx=rated.length?Math.round(rated.reduce((a,p)=>a+pr[p.k].pct,0)/rated.length):null;
+ const counts={strong:0,partial:0,weak:0,na:0};PR.forEach(p=>counts[pr[p.k].rating]++);
+ const gov=scoreSet(GOVQ),acc=scoreSet(ACCQ);
+ const raci=S.raci.rows.map(raciStatus);const pol=polStats();
+ const M={pr,rated,idx,counts,gov,acc,raci,pol};
+ const order=k=>{const p=pr[k];return p&&p.pct!=null?p.pct:50;};
+ // strengths & gaps
+ const strengths=[],gaps=[];
+ ALLQ.forEach(q=>{const v=eff(q);if(v===3)strengths.push({text:q.s,lens:q.lens,pk:q.pk});else if(v===0||v===1)gaps.push({text:q.w,lens:q.lens,pk:q.pk,sev:v,rec:q.rec,id:q.id});});
+ if(pol.approved)strengths.push({text:`${pol.approved} IT ${pol.approved===1?"policy is":"policies are"} formally approved`,lens:"IT policies"});
+ const clearRows=[],ambRows=[];
+ S.raci.rows.forEach((r,i)=>{const st=raci[i];if(st.s==="clear")clearRows.push({r,st});else if(st.s!=="unmapped")ambRows.push({r,st});});
+ if(clearRows.length)strengths.push({text:`A single accountable owner exists for ${plural(clearRows.length,"key IT decision")}`,lens:"Decision rights"});
+ if(pol.drafted)gaps.push({text:`${pol.drafted} IT ${pol.drafted===1?"policy is":"policies are"} drafted but not approved`,lens:"IT policies",sev:1,pk:"conf",rec:`Approve the ${pol.drafted} drafted IT ${pol.drafted===1?"policy":"policies"}, each with an owner, an enforcement rule and an annual review date`,id:"pol"});
+ const noA=ambRows.filter(x=>x.st.s==="noA"||x.st.s==="unclear"||x.st.s==="multiA");
+ if(noA.length)gaps.push({text:`No single accountable owner for ${listJoin(noA.map(x=>"“"+x.r.d+"”"))}`,lens:"Decision rights",sev:0,pk:"resp",rec:"Publish a RACI that names one accountable owner for each key IT decision",id:"raci"});
+ gaps.sort((a,b)=>a.sev-b.sev||order(a.pk)-order(b.pk));
+ strengths.sort((a,b)=>order(b.pk)-order(a.pk));
+ // recommendations
+ const recs=[];const seen=new Set();
+ const pri=gaps.slice().sort((a,b)=>((a.id==="pol"||a.id==="raci")?-1:0)-((b.id==="pol"||b.id==="raci")?-1:0)||a.sev-b.sev||order(a.pk)-order(b.pk));
+ pri.forEach(g=>{if(g.rec&&!seen.has(g.rec)&&recs.length<5){seen.add(g.rec);recs.push(g.rec);}});
+ // to verify
+ const verify=[];
+ ALLQ.forEach(q=>{const r=S.ans[q.id];if(!r||r.a==null)return;
+  if(r.a<0)verify.push({text:`${q.lens}: ${q.en}`,why:"Unknown"});
+  else if(r.a===3&&r.b!=="doc")verify.push({text:`${q.s} (claimed, document not seen)`,why:"No document"});
+  else if(r.b==="told")verify.push({text:`${q.lens}: ${q.en}`,why:"Verbal only"});});
+ S.raci.rows.forEach((r,i)=>{if(raci[i].s==="unclear")verify.push({text:`Decision rights for “${r.d}” are not formally defined`,why:"RACI"});else if(raci[i].s==="unmapped")verify.push({text:`Map decision rights for “${r.d}”`,why:"RACI"});});
+ if(pol.assessed<pol.total){const n=pol.total-pol.assessed;verify.push({text:`Status of ${n} IT ${n===1?"policy":"policies"} not yet assessed`,why:"Policies"});}
+ DC.forEach(d=>{const x=S.dc[d.k];if(!x||!String(x.text||"").trim())verify.push({text:`Ask: ${d.q}`,why:"Not asked"});else if(x.b==="told")verify.push({text:`Confirm with documents: ${d.q}`,why:"Verbal only"});});
+ // clear vs ambiguous
+ const clear=clearRows.map(x=>({d:x.r.d,why:`${roleName(x.st.A[0])} accountable`}));
+ const amb=ambRows.map(x=>{const s=x.st.s;let why=s==="noA"?"no accountable owner":s==="multiA"?"accountability split between "+listJoin(x.st.A.map(roleName)):s==="unclear"?"roles not formally defined":"no one assigned to do the work";return{d:x.r.d,why};});
+ const r2=eff(PR[0].qs[1]);if(r2===0||r2===1)amb.push({d:"Business units’ IT duties and data ownership",why:"undefined"});
+ const g2=eff(GOVQ[1]);if(g2===0||g2===1)amb.push({d:"IT risk appetite",why:"no governing body sets it"});
+ Object.assign(M,{strengths,gaps,recs,verify,clear,amb});
+ return M;}
+function sepVerdict(M){return{strong:["Clearly separated","strong"],partial:["Partly separated","partial"],weak:["Merged","weak"],na:["Not assessed","na"]}[M.gov.rating];}
+function progress(k){const ansd=qs=>qs.filter(q=>S.ans[q.id]&&S.ans[q.id].a!=null).length;
+ switch(k){
+ case"profile":{const f=["name","sector","employees","ownership","business","itHead","itReports"];return[f.filter(x=>String(S.org[x]||"").trim()).length,f.length];}
+ case"stakeholders":{const a=SH_IN.concat(SH_EX);return[a.filter(s=>S.sh[s.k]&&S.sh[s.k].level!=null).length,a.length];}
+ case"raci":return[S.raci.rows.filter(r=>r.c.some(x=>x)).length,S.raci.rows.length];
+ case"policies":return[S.pol.filter(p=>p.status!=null).length,S.pol.length];
+ case"principles":{const qs=PR.flatMap(p=>p.qs);return[ansd(qs),qs.length];}
+ case"separation":return[ansd(GOVQ),GOVQ.length];
+ case"accountability":return[ansd(ACCQ),ACCQ.length];
+ case"evidence":return[DC.filter(d=>S.dc[d.k]&&String(S.dc[d.k].text||"").trim()).length+(S.src.length?1:0),DC.length+1];
+ case"discussion":return[(S.disc.pos?1:0)+(String(S.disc.text||"").trim()?1:0),2];
+ default:return null;}}
+function overall(){let d=0,t=0;STEPS.forEach(s=>{const p=progress(s.k);if(p){d+=p[0];t+=p[1];}});return t?Math.round(d/t*100):0;}
+
+/* ============ narrative ============ */
+function profilePhrase(){const o=S.org;let s="";
+ const own=o.ownership&&o.ownership!=="Other"?lc(o.ownership):"";
+ if(own)s=`, ${/^[aeiou]/i.test(own)?"an":"a"} ${own}`;
+ if(o.sector&&o.sector!=="Other")s+=(s?" in the ":", an organization in the ")+lc(o.sector)+" sector";
+ if(o.employees)s+=` with ${o.employees==="Under 50"?"fewer than 50":o.employees==="5,000 or more"?"5,000 or more":o.employees} employees`;
+ return s;}
+function autoSummary(M){const o=S.org,name=o.name||"the organization";const c=M.counts;const t=[];
+ t.push(`This preliminary diagnostic assessed IT governance at ${name}${profilePhrase()}, using the six ISO/IEC 38500 principles as the analytical lens.`);
+ if(M.rated.length){t.push(`Of the six principles, ${c.strong} rated strong, ${c.partial} partial and ${c.weak} weak${c.na?`; ${c.na} could not be rated for lack of evidence`:""}.`);
+  const r=M.rated.slice().sort((a,b)=>M.pr[b.k].pct-M.pr[a.k].pct);
+  if(r.length>1)t.push(`The strongest area is ${r[0].name} (${M.pr[r[0].k].pct}%) and the weakest is ${r[r.length-1].name} (${M.pr[r[r.length-1].k].pct}%).`);}
+ else t.push("Too few questions have been answered to rate the principles yet.");
+ const sv=sepVerdict(M);if(M.gov.rating!=="na")t.push(`Governance and management appear ${sv[0].toLowerCase()}.`);
+ const p=M.pol;if(p.assessed){t.push(p.written?`${p.approved} of ${p.written} written IT ${p.written===1?"policy is":"policies are"} formally approved${p.drafted?`; ${p.drafted} ${p.drafted===1?"is a draft":"are drafts"} awaiting approval`:""}.`:"No written IT policies were found.");}
+ const mapped=M.raci.filter(x=>x.s!=="unmapped").length;if(mapped)t.push(`${M.clear.length} of ${mapped} key IT decisions have a single, clear accountable owner.`);
+ if(M.verify.length)t.push(`${plural(M.verify.length,"item")} still ${M.verify.length===1?"needs":"need"} documentary evidence before Part 2.`);
+ return t.join(" ");}
+function autoReflection(M){const t=[];
+ if(M.clear.length)t.push(`Responsibility appears clear for ${listJoin(M.clear.map(x=>`“${x.d}” (${x.why})`))}.`);
+ if(M.amb.length)t.push(`It appears ambiguous for ${listJoin(M.amb.map(x=>`“${x.d}” (${x.why})`))}.`);
+ if(!M.clear.length&&!M.amb.length)t.push("Decision rights have not been mapped yet, so the clarity of responsibility cannot be judged.");
+ if(M.clear.length&&M.amb.length)t.push("The pattern is that responsibility is clear where IT work is done and less clear where IT decisions are made.");
+ const r=M.pr.resp;if(r.rating!=="na")t.push(`The ISO/IEC 38500 Responsibility principle rates ${RL[r.rating].toLowerCase()} (${r.pct}%)${eff(PR[0].qs[2])!==null&&eff(PR[0].qs[2])<3&&eff(PR[0].qs[2])>=0?", and responsibility is not always matched with the authority to act":""}.`);
+ const sv=sepVerdict(M);if(M.gov.rating!=="na")t.push(`Because governance and management are ${sv[0].toLowerCase()}, ${M.gov.rating==="strong"?"accountability can be traced from decision to delivery":"it is hard to tell who answers when an IT decision goes wrong"}.`);
+ t.push("Part 2 will test these observations against documents and interviews.");
+ return t.join(" ");}
+function invRow(){return S.raci.rows.find(r=>/invest/i.test(r.d))||S.raci.rows[1]||S.raci.rows[0];}
+function draftDiscussion(M){const o=S.org,name=o.name||"this organization";const pos=S.disc.pos||"layered";
+ const open={board:"I hold that the board carries ultimate accountability. It approved the investment and set the risk appetite, and accountability for an outcome cannot be fully delegated away (Slide 54). Executive management and the CIO still answer for their own decisions within that frame.",
+ exec:"I hold that executive management carries the main accountability, because it turned the strategy into a plan, allocated the resources and oversaw delivery. The board answers for its approval decision, and the CIO for technical delivery.",
+ cio:"I hold that the CIO is the first to answer, as the direct technical and operational owner. That is fair only if the CIO had the authority to match the responsibility; otherwise accountability moves up to whoever held the decision rights.",
+ layered:"I hold that accountability should be layered by decision rather than pooled."}[pos];
+ const core="The board answers for approving the investment and for the risk appetite behind it; executive management answers for turning the strategy into a funded, overseen plan; the CIO answers for delivery within the approved scope, budget and risk limits, and for escalating early. Each of these decisions needs exactly one accountable owner, recorded in a RACI, so that sharing does not dilute accountability. The ISO/IEC 38500 Responsibility principle supports this: responsibility must be assigned, understood and accepted, and matched with the authority to act.";
+ const ir=invRow();let local=[];
+ if(ir){const st=raciStatus(ir);if(st.s==="clear"||(st.A.length===1))local.push(`In ${name}, the ${roleName(st.A[0])} is accountable for “${ir.d}”`);else local.push(`In ${name}, no single role is accountable for “${ir.d}”`);}
+ const b=S.sh.board;if(b&&b.level!=null)local.push(`the board or owners ${["are not involved in IT decisions","are only informed about IT decisions","are consulted on IT decisions","decide on major IT matters"][b.level]}`);
+ const amb=M.amb.filter(x=>x.d!==(ir&&ir.d));if(amb.length)local.push(`and ${listJoin(amb.slice(0,3).map(x=>"“"+x.d+"”"))} ${amb.length===1?"has":"have"} no clear owner`);
+ let tail=local.length?local.join("; ")+".":"";
+ tail+=` If an IT investment failed here today, ${ir&&raciStatus(ir).A.length===1?"the "+roleName(raciStatus(ir).A[0])+" would answer for the approval decision, but the decisions without an owner would leave gaps that no one could be held to.":"it would be hard to say who answers, which is itself the main governance finding."}`;
+ return [open,core,tail.trim()].join("\n\n");}
+
+/* ============ report ============ */
+function reportBlocks(M){const o=S.org,B=[];
+ const title=`IT Governance Diagnostic, Part 1: ${o.name||"Organization"}`;
+ B.push({t:"title",text:title});
+ B.push({t:"meta",text:[o.assessor?`Prepared by ${o.assessor}`:"",fmtDate(o.date),"IT Policy and Governance, Week 1 deliverable"].filter(Boolean).join(" · ")});
+ B.push({t:"h2",text:"1. Executive summary"});B.push({t:"p",text:(S.txt.summary||"").trim()||autoSummary(M)});
+ const basis={doc:0,obs:0,told:0};ALLQ.forEach(q=>{const r=S.ans[q.id];if(r&&r.a!=null&&r.a>=0&&basis[r.b]!=null)basis[r.b]++;});
+ const ints=S.src.filter(x=>x.type==="Interview").length,docs=S.src.filter(x=>x.type==="Document").length;
+ B.push({t:"h2",text:"2. Scope and method"});
+ B.push({t:"p",text:`This is a preliminary, structured first look, not a comprehensive audit. The six ISO/IEC 38500 principles are the primary analytical framework, supported by the COBIT distinction between governance and management and by a RACI map of decision rights. The assessor’s position is: ${o.assessorRole?lc(o.assessorRole):"not stated"}. Answers rest on ${basis.doc} documents seen, ${basis.obs} observations and ${basis.told} verbal statements, with ${plural(ints,"interview")} and ${plural(docs,"document")} logged as sources. Ratings: Strong 70% or more, Partial 40–69%, Weak below 40%. A claim of documentation without a document seen counts as Partial, and unknowns are listed for Part 2.`});
+ B.push({t:"h2",text:"3. Organization profile"});
+ const regs=o.regs.map(k=>(REGS.find(r=>r.k===k)||{}).l).filter(Boolean);if(o.regsOther)regs.push(o.regsOther);
+ const prow=[["Sector",o.sector],["Size",o.employees?o.employees+" employees":""],["Sites / companies",o.sites],["Ownership structure",o.ownership],["Group structure",o.group],["Nature of business",o.business],["IT function",[o.itHead,o.itTeam?`team of ${o.itTeam}`:"",o.itReports?`reports to ${o.itReports}`:""].filter(Boolean).join(", ")],["Key systems",o.systems],["Regulatory context",regs.join("; ")]].filter(r=>String(r[1]||"").trim());
+ B.push({t:"table",w:[28,72],head:["Item","Description"],rows:prow.length?prow:[["Profile","Not completed"]]});
+ B.push({t:"h2",text:"4. Key stakeholders in IT governance"});
+ B.push({t:"p",text:"Stakeholders are mapped to the lecture categories (Slides 34–38). The role column reflects observed involvement in IT decisions, not formal titles."});
+ const shr=[];SH_IN.forEach(s=>{const x=S.sh[s.k];if(x&&(x.who||x.level!=null))shr.push([s.l+" (internal)",x.who||"—",x.level!=null?LV_IN[x.level]:"—"]);});
+ SH_EX.forEach(s=>{const x=S.sh[s.k];if(x&&(x.who||x.level!=null))shr.push([s.l+" (external)",x.who||"—",x.level!=null?LV_EX[x.level]:"—"]);});
+ B.push({t:"table",w:[34,40,26],head:["Lecture category","In this organization","Role in IT governance"],rows:shr.length?shr:[["Not mapped yet","",""]]});
+ B.push({t:"h2",text:"5. Documented IT policies"});
+ const p=M.pol;let pt;
+ if(!p.assessed)pt="The presence of IT policies has not been assessed yet.";
+ else{pt=`Of ${plural(p.assessed,"policy area")} reviewed, ${p.written} ${p.written===1?"has":"have"} a written policy and ${p.approved} ${p.approved===1?"is":"are"} formally approved`;
+  pt+=p.drafted?`; ${p.drafted} ${p.drafted===1?"is a draft":"are drafts"} without approval`:"";pt+=p.informal?`; ${p.informal} ${p.informal===1?"exists":"exist"} only as unwritten practice`:"";pt+=p.none?`; ${p.none} ${p.none===1?"is":"are"} absent`:"";pt+=".";
+  if(p.stage!=null)pt+=` Against the policy lifecycle (Slide 10), the organization typically sits at the “${LIFE[p.stage]}” stage.`;
+  pt+=` A typical policy contains ${p.comp} of the 7 core components listed in Slide 8${p.comp<7?` (missing: ${listJoin(COMP.filter(c=>!S.comp[c.k]).map(c=>lc(c.l)))})`:""}.`;}
+ B.push({t:"p",text:pt});
+ const polr=S.pol.filter(x=>x.status!=null&&x.status>=1).map(x=>[x.name,PST[x.status].l,x.ref||"—"]);
+ if(polr.length)B.push({t:"table",w:[40,24,36],head:["Policy","Status","Evidence"],rows:polr});
+ B.push({t:"h2",text:"6. Assessment against the ISO/IEC 38500 principles"});
+ B.push({t:"table",w:[17,15,34,34],head:["Principle","Rating","Evidence observed","Main gap"],rows:PR.map(pp=>{const sc=M.pr[pp.k];const st=pp.qs.filter(q=>eff(q)>=2).map(q=>q.s);const gp=pp.qs.filter(q=>{const v=eff(q);return v===0||v===1;}).sort((a,b)=>eff(a)-eff(b)).map(q=>q.w);
+  return[pp.name,sc.pct==null?RL.na:`${RL[sc.rating]} (${sc.pct}%)`,st.slice(0,2).join("; ")||"None confirmed",gp.slice(0,2).join("; ")||(sc.unk?"Evidence still to collect":"No major gap found")];})});
+ B.push({t:"h2",text:"7. Governance vs. management, accountability and transparency"});
+ const sv=sepVerdict(M);
+ const gtext=GOVQ.map(q=>{const v=eff(q);return v===null||v<0?null:(v>=2?q.s:q.w);}).filter(Boolean);
+ B.push({t:"p",text:M.gov.rating==="na"?"The separation between governance and management has not been assessed yet.":`Governance and management appear ${sv[0].toLowerCase()} (${M.gov.pct}%). ${gtext.join(". ")}.${o.itReports?` The IT function reports to ${o.itReports}.`:""}`});
+ const rr=S.raci.rows.map((r,i)=>{const st=M.raci[i];return[r.d,st.A.length?st.A.map(roleName).join(", "):"—",RACI_ST[st.s][0]];});
+ B.push({t:"table",w:[46,26,28],head:["Key IT decision","Accountable","Status"],rows:rr});
+ const present=ACCQ.filter(q=>eff(q)>=2).map(q=>lc(q.s)),absent=ACCQ.filter(q=>{const v=eff(q);return v===0||v===1;}).map(q=>lc(q.w));
+ B.push({t:"p",text:M.acc.rating==="na"?"Accountability and transparency mechanisms have not been assessed yet.":`Accountability and transparency mechanisms (Slide 56) rate ${RL[M.acc.rating].toLowerCase()} (${M.acc.pct}%).${present.length?` In place: ${listJoin(present)}.`:""}${absent.length?` Missing or informal: ${listJoin(absent)}.`:""} Stakeholders cannot hold anyone to account for outcomes they cannot see, so transparency is the precondition for accountability.`});
+ B.push({t:"h2",text:"8. Strengths and weaknesses"});
+ B.push({t:"h3",text:"Strengths"});B.push({t:"ul",items:M.strengths.length?M.strengths.slice(0,6).map(x=>x.text):["No strengths could be confirmed with evidence yet."]});
+ B.push({t:"h3",text:"Weaknesses"});B.push({t:"ul",items:M.gaps.length?M.gaps.slice(0,6).map(x=>x.text):["No major weaknesses were identified from the evidence collected."]});
+ B.push({t:"h2",text:"9. Reflection: where responsibility is clear and where it is ambiguous"});
+ B.push({t:"p",text:(S.txt.reflection||"").trim()||autoReflection(M)});
+ B.push({t:"h2",text:"10. Next steps for Part 2"});
+ if(M.recs.length){B.push({t:"p",text:"Priority actions to test in Part 2:"});B.push({t:"ol",items:M.recs});}
+ if(M.verify.length){B.push({t:"p",text:"Evidence still to collect:"});B.push({t:"ul",items:M.verify.slice(0,8).map(v=>v.text)});}
+ B.push({t:"h2",text:"References"});
+ const refs=["Week 1 lecture: Introduction to Information Technology Policy and Governance. Executive Masters in Information Systems Engineering and Management.","ISO/IEC 38500:2024. Information technology — Governance of IT for the organization. International Organization for Standardization.","ISACA (2018–2019). COBIT 2019 Framework: Introduction & Methodology; Governance and Management Objectives.","Weill, P., & Ross, J. W. IT Governance: How Top Performers Manage IT Decision Rights for Superior Results. Harvard Business School Press."];
+ o.regs.forEach(k=>{const r=REGS.find(x=>x.k===k);if(r&&r.ref)refs.push(r.ref);});
+ S.src.forEach(x=>{if(!x.name)return;refs.push(`${x.type}: ${x.name}${x.role?`, ${x.role}`:""}${x.date?` (${x.date})`:""}${x.note?`. ${x.note}`:""}.`.replace(/\.\.$/,"."));});
+ B.push({t:"ul",items:refs});
+ return B;}
+function blocksHTML(B){return B.map(b=>{switch(b.t){
+ case"title":return`<h1>${esc(b.text)}</h1>`;case"meta":return`<p class="meta">${esc(b.text)}</p>`;
+ case"h2":return`<h2>${esc(b.text)}</h2>`;case"h3":return`<h3>${esc(b.text)}</h3>`;case"p":return`<p>${esc(b.text)}</p>`;
+ case"ul":return`<ul>${b.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>`;case"ol":return`<ol>${b.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ol>`;
+ case"table":return`<div class="tw"><table><thead><tr>${b.head.map((h,i)=>`<th style="width:${b.w[i]}%">${esc(h)}</th>`).join("")}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;}}).join("");}
+function blocksMD(B){return B.map(b=>{switch(b.t){
+ case"title":return`# ${b.text}`;case"meta":return`_${b.text}_`;case"h2":return`## ${b.text}`;case"h3":return`### ${b.text}`;case"p":return b.text;
+ case"ul":return b.items.map(i=>`- ${i}`).join("\n");case"ol":return b.items.map((i,n)=>`${n+1}. ${i}`).join("\n");
+ case"table":{const cl=c=>String(c).replace(/\|/g,"\\|").replace(/\n/g," ");return[`| ${b.head.map(cl).join(" | ")} |`,`| ${b.head.map(()=>"---").join(" | ")} |`].concat(b.rows.map(r=>`| ${r.map(cl).join(" | ")} |`)).join("\n");}}}).join("\n\n")+"\n";}
+function blocksText(B){return B.map(b=>{switch(b.t){
+ case"title":case"meta":case"h2":case"h3":case"p":return b.text;case"ul":return b.items.map(i=>"• "+i).join("\n");case"ol":return b.items.map((i,n)=>`${n+1}. ${i}`).join("\n");
+ case"table":return[b.head.join("\t")].concat(b.rows.map(r=>r.join("\t"))).join("\n");}}).join("\n\n");}
+function wordCount(B){return blocksText(B).split(/\s+/).filter(Boolean).length;}
+function pageEstimate(B){const w=wordCount(B);const rows=B.filter(b=>b.t==="table").reduce((a,b)=>a+b.rows.length+1,0);return Math.max(1,Math.round((w/520+rows*0.018)*10)/10);}
+function loadDocx(){if(window.docx)return Promise.resolve(window.docx);if(docxP)return docxP;
+ docxP=new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js";s.onload=()=>window.docx?res(window.docx):rej(new Error("docx missing"));s.onerror=()=>{docxP=null;rej(new Error("load failed"));};document.head.appendChild(s);});return docxP;}
+function buildDocx(D,B){
+ const F="Calibri";const kids=[];
+ const run=(text,o)=>new D.TextRun(Object.assign({text:String(text),font:F},o||{}));
+ B.forEach(b=>{
+  if(b.t==="title")kids.push(new D.Paragraph({children:[run(b.text,{bold:true,size:36,color:"12201B"})],spacing:{after:80}}));
+  else if(b.t==="meta")kids.push(new D.Paragraph({children:[run(b.text,{size:18,color:"56645E"})],spacing:{after:240}}));
+  else if(b.t==="h2")kids.push(new D.Paragraph({heading:D.HeadingLevel.HEADING_2,children:[run(b.text,{bold:true,size:24,color:"1F6B52"})],spacing:{before:220,after:80}}));
+  else if(b.t==="h3")kids.push(new D.Paragraph({heading:D.HeadingLevel.HEADING_3,children:[run(b.text,{bold:true,size:21,color:"12201B"})],spacing:{before:120,after:40}}));
+  else if(b.t==="p")kids.push(new D.Paragraph({children:[run(b.text,{size:21})],spacing:{after:100},alignment:D.AlignmentType.JUSTIFIED}));
+  else if(b.t==="ul")b.items.forEach(i=>kids.push(new D.Paragraph({children:[run(i,{size:21})],bullet:{level:0},spacing:{after:40}})));
+  else if(b.t==="ol")b.items.forEach(i=>kids.push(new D.Paragraph({children:[run(i,{size:21})],numbering:{reference:"recs",level:0},spacing:{after:40}})));
+  else if(b.t==="table"){
+   const mk=(cells,hd)=>new D.TableRow({tableHeader:hd,children:cells.map((c,ci)=>new D.TableCell({width:{size:b.w[ci],type:D.WidthType.PERCENTAGE},shading:hd?{type:D.ShadingType.CLEAR,color:"auto",fill:"E3E9E4"}:undefined,margins:{top:50,bottom:50,left:90,right:90},children:[new D.Paragraph({children:[run(c,{size:18,bold:!!hd})]})]}))});
+   kids.push(new D.Table({width:{size:100,type:D.WidthType.PERCENTAGE},rows:[mk(b.head,true)].concat(b.rows.map(r=>mk(r,false)))}));
+   kids.push(new D.Paragraph({children:[],spacing:{after:80}}));}});
+ return new D.Document({creator:S.org.assessor||"IT Governance Diagnostic Kit",title:B[0].text,
+  numbering:{config:[{reference:"recs",levels:[{level:0,format:D.LevelFormat.DECIMAL,text:"%1.",alignment:D.AlignmentType.START,style:{paragraph:{indent:{left:420,hanging:300}}}}]}]},
+  sections:[{properties:{page:{size:{width:11906,height:16838},margin:{top:1134,bottom:1134,left:1191,right:1191}}},
+   footers:{default:new D.Footer({children:[new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[run("Page ",{size:16,color:"56645E"}),new D.TextRun({children:[D.PageNumber.CURRENT],size:16,color:"56645E",font:F})]})]})},
+   children:kids}]});}
+
+/* ============ rendering bits ============ */
+const chip=r=>`<span class="chip ${r}">${RL[r]}</span>`;
+const ARHTML=t=>t?`<p class="ar">${t}</p>`:"";
+function head(k,title,lede,ar){const i=STEPS.findIndex(s=>s.k===k);return`<header class="sh"><p class="eyebrow">${i?`Step ${i} of ${STEPS.length-1} · `:""}${esc(STEPS[i].ref)}</p><h1>${title}</h1>${lede?`<p class="lede">${lede}</p>`:""}${ARHTML(ar)}</header>`;}
+function stepnav(k){const i=STEPS.findIndex(s=>s.k===k);const p=STEPS[i-1],n=STEPS[i+1];return`<nav class="stepnav" aria-label="Step navigation">${p?`<a class="btn" href="#${p.k}">← ${esc(p.l)}</a>`:"<span></span>"}${n?`<a class="btn pri" href="#${n.k}">${esc(n.l)} →</a>`:"<span></span>"}</nav>`;}
+function fid(p){return"f-"+p.replace(/\./g,"-");}
+function fText(p,label,ph,o){o=o||{};const v=getPath(p);return`<div class="fld${o.wide?" wide":""}"><label for="${fid(p)}">${label}</label>${o.area?`<textarea id="${fid(p)}" data-k="${p}" rows="${o.rows||3}" placeholder="${esc(ph||"")}">${esc(v)}</textarea>`:`<input id="${fid(p)}" data-k="${p}" type="${o.type||"text"}" value="${esc(v)}" placeholder="${esc(ph||"")}">`}${ARHTML(o.ar)}</div>`;}
+function fSel(p,label,opts,o){o=o||{};const v=getPath(p)||"";return`<div class="fld${o.wide?" wide":""}"><label for="${fid(p)}">${label}</label><select id="${fid(p)}" data-k="${p}"><option value="">Select…</option>${opts.map(x=>`<option ${x===v?"selected":""}>${esc(x)}</option>`).join("")}${v&&!opts.includes(v)?`<option selected>${esc(v)}</option>`:""}</select>${ARHTML(o.ar)}</div>`;}
+function qCard(q){const r=S.ans[q.id]||{};const a=r.a==null?"":r.a;
+ return`<div class="qc" data-q="${q.id}" data-a="${a}"><p class="qt">${esc(q.en)}</p>${ARHTML(q.ar)}
+ <div class="opts" role="radiogroup" aria-label="${esc(q.en)}">${ANS.map(o=>`<label class="opt o${o.v<0?"u":o.v}"><input type="radio" name="q-${q.id}" value="${o.v}" data-k="ans.${q.id}.a" data-num ${a===o.v?"checked":""}><span>${o.l}</span></label>`).join("")}</div>
+ <div class="evrow"><select id="b-${q.id}" data-k="ans.${q.id}.b" aria-label="Evidence basis">${BASIS.map(b=>`<option value="${b.k}" ${(r.b||"")===b.k?"selected":""}>${b.l}</option>`).join("")}</select><input id="e-${q.id}" data-k="ans.${q.id}.ev" value="${esc(r.ev||"")}" placeholder="Evidence or reference, e.g. “Access policy v1.2, signed 03/2025”" aria-label="Evidence reference"></div>
+ <p class="capnote" data-live="cap-${q.id}"></p></div>`;}
+function capText(id){const r=S.ans[id];if(!r||r.a==null)return"";if(r.a<0)return"Listed under To verify.";if(r.a===3&&r.b!=="doc")return"Counts as Partly until a document is seen.";if(r.b==="told")return"Verbal only: listed under To verify.";return"";}
+function bars(M,compact){return`<div class="bars">${compact?"":`<div class="bscale" aria-hidden="true"><span></span><span class="ax"><span style="left:0">0</span><span style="left:40%">40 Partial</span><span style="left:70%">70 Strong</span><span style="left:100%">100</span></span><span></span><span class="sp"></span></div>`}${PR.map(p=>{const s=M.pr[p.k];return`<div class="brow"><span class="bn">${p.name}</span><span class="track" role="img" aria-label="${p.name}: ${s.pct==null?"not rated":s.pct+"%"}" title="${p.name}: ${s.pct==null?"not rated":s.pct+"%, "+s.n+" of "+s.total+" answered with evidence"}"><span class="fill ${s.rating}" style="width:${s.pct||0}%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:70%"></span></span><span class="bp">${s.pct==null?"–":s.pct+"%"}</span>${chip(s.rating)}</div>`;}).join("")}</div>`;}
+function lifeHTML(p){if(p.stage==null)return LIFE.map(l=>`<div class="next"><span class="s">Not assessed</span><b>${l}</b></div>`).join("");
+ return LIFE.map((l,i)=>{const c=i<p.stage?"done":i===p.stage?"here":"next";const s=c==="done"?"Done":c==="here"?"Typical position":"Not reached";return`<div class="${c}"><span class="s">${String(i+1).padStart(2,"0")} · ${s}</span><b>${l}</b></div>`;}).join("");}
+
+/* ============ views ============ */
+const V={};
+V.brief=()=>{const M=metrics(),pc=overall();
+ const nxt=STEPS.find(s=>{const p=progress(s.k);return p&&p[0]<p[1];});
+ const items=Object.values(STORE.list).sort((a,b)=>b.updated-a.updated);
+ return`${head("brief","IT Governance Diagnostic Kit","A structured first look at how an organization governs IT, built on the six ISO/IEC 38500 principles. Answer each question with the evidence you have; the kit builds the scorecard, the Part 1 report and a presentation.","أداة تشخيص حوكمة الـ IT: بتجاوب على أسئلة المحاضرة خطوة بخطوة ومعاها الدليل، والأداة تطلّع التقييم والتقرير والعرض لوحدها. تنفع لأي شركة.")}
+ <section class="grid2" style="align-items:start">
+  <div class="card dark"><div class="row" style="justify-content:space-between"><div><p class="eyebrow" style="color:var(--brass)">Current assessment</p><h2 class="sec">${esc(S.org.name||"Untitled assessment")}</h2></div>${S.sample?`<span class="chip partial">Example</span>`:""}</div>
+   <div class="grid2"><div><p class="muted small">Completion</p><p style="font-size:30px;font-weight:600">${pc}%</p><div class="prog"><span style="width:${pc}%"></span></div></div><div><p class="muted small">ISO/IEC 38500 average</p><p style="font-size:30px;font-weight:600;color:var(--brass)">${M.idx==null?"–":M.idx+"%"}</p><p class="muted small">${M.counts.strong} strong · ${M.counts.partial} partial · ${M.counts.weak} weak</p></div></div>
+   <div class="row">${nxt?`<a class="btn pri" href="#${nxt.k}">Continue: ${esc(nxt.l)}</a>`:`<a class="btn pri" href="#report">Open the report</a>`}<a class="btn" href="#results">Results</a><button class="btn" type="button" data-act="present">Present</button></div></div>
+  <div class="card"><h2 class="sec">Scorecard so far</h2>${bars(M,true)}<p class="note">Ratings update as you answer. A principle needs at least half of its questions answered with evidence before it is rated.</p></div>
+ </section>
+ <section><p class="eyebrow" style="margin-bottom:10px">Practical activity · Slide 59</p><div class="rules">
+  <div class="card"><h3>A structured first look</h3><p class="muted">The goal is not a comprehensive audit. Use the lecture concepts to take a structured first look at one organization.</p>${ARHTML("مش Audit شامل. دي نظرة أولى منظمة باستخدام مفاهيم المحاضرة.")}</div>
+  <div class="card"><h3>Evidence, not assumptions</h3><p class="muted">Record what you can show. Unknowns are findings too: answer “Don’t know” and they move to the To verify list.</p>${ARHTML("اللي مش متأكد منه اختار Don’t know. ده في حد ذاته نتيجة، وهيظهر في قائمة To verify.")}</div>
+  <div class="card"><h3>An organization you know well</h3><p class="muted">Choose an organization you know or can reach, and say how you know it. Ask for documents, not verbal assurance.</p>${ARHTML("اختار مؤسسة تعرفها أو تقدر توصل لناسها ومستنداتها، واطلب المستند مش الكلام.")}</div>
+ </div></section>
+ <section class="grid2">
+  <div class="card saved"><h2 class="sec">Saved assessments</h2><ul class="list">${items.map(s=>{const isC=s.id===STORE.cur;return`<li><div><b>${esc(s.org.name||"Untitled assessment")}</b>${s.sample?` <span class="chip partial">Example</span>`:""}<p class="muted small">Updated ${new Date(s.updated).toLocaleDateString()}</p></div><div class="row">${isC?`<span class="chip strong">Open</span>`:`<button class="btn sm" type="button" data-act="open" data-id="${s.id}">Open</button>`}<button class="btn sm warn" type="button" data-act="del" data-id="${s.id}">Delete</button></div></li>`;}).join("")}</ul>
+   <form class="newf" id="newForm"><div class="fld"><label for="newName">New assessment: organization name</label><input id="newName" type="text" required placeholder="Organization name"></div><button class="btn pri" type="submit">Start assessment</button></form>
+   <div class="row small"><button class="linkbtn" type="button" data-act="import">Import a saved file (.json)</button>${Object.values(STORE.list).some(s=>s.sample)?"":`<button class="linkbtn" type="button" data-act="loadsample">Load the example again</button>`}</div>
+   <p class="note">Work is saved in this browser only. Export a file from the Report step to keep a copy or move it to another device.</p></div>
+  <div class="card"><h2 class="sec">How answers are scored</h2>
+   <div class="tw"><table class="legend"><thead><tr><th>Answer</th><th>Points</th><th>Meaning</th></tr></thead><tbody>
+   <tr><td>Yes, documented</td><td class="mono">3</td><td>Exists, written and in use. Counts as 2 until you mark “Document seen”.</td></tr>
+   <tr><td>Partly</td><td class="mono">2</td><td>Exists but incomplete, outdated or unapproved.</td></tr>
+   <tr><td>Informal only</td><td class="mono">1</td><td>Happens in practice, nothing written.</td></tr>
+   <tr><td>No</td><td class="mono">0</td><td>Absent.</td></tr>
+   <tr><td>Don’t know</td><td class="mono">–</td><td>Not scored; listed under To verify.</td></tr></tbody></table></div>
+   <p class="note">Principle score = points ÷ maximum for the answered questions. Strong ≥ 70%, Partial 40–69%, Weak &lt; 40%.</p>${ARHTML("لو حد قالك «أيوه عندنا» ومشفتش المستند، اختار Told (verbal only). الأداة مش هتدّيها الدرجة الكاملة لحد ما تشوف الدليل.")}</div>
+ </section>`;};
+
+V.profile=()=>`${head("profile","Organization profile","Requirement 1 of the deliverable: sector, size, ownership structure and nature of business.","المتطلب الأول في Slide 62: وصف مختصر للمؤسسة. اكتب اللي متأكد منه بس، والباقي سيبه فاضي لحد ما تتأكد.")}
+ <div class="card"><div class="fields">
+ ${fText("org.name","Organization name","e.g. Your organization")}
+ ${fSel("org.sector","Sector",SECTORS)}
+ ${fSel("org.employees","Number of employees",SIZES)}
+ ${fText("org.sites","Sites or companies","e.g. Head office and two branches")}
+ ${fSel("org.ownership","Ownership structure",OWN,{ar:"عائلية، شراكة، مساهمة مدرجة، مجموعة قابضة، حكومية…"})}
+ ${fText("org.group","Group structure","Parent, subsidiaries, sister companies")}
+ ${fText("org.business","Nature of business","What the organization does and for whom",{area:true,wide:true})}
+ ${fText("org.itHead","Title of the IT head","e.g. IT Manager, CIO")}
+ ${fText("org.itTeam","IT team size","e.g. 6",{type:"number"})}
+ ${fSel("org.itReports","IT reports to",REPORTS,{ar:"خط التقارير ده بيحدد مين بيقرر في الـ IT فعلاً."})}
+ ${fText("org.systems","Key systems","ERP, CRM, email, cloud services")}
+ <div class="fld wide"><span class="lab">Regulatory context</span><div class="checks">${REGS.map(r=>`<label class="ck"><input type="checkbox" data-reg="${r.k}" ${S.org.regs.includes(r.k)?"checked":""}>${esc(r.l)}</label>`).join("")}</div><input data-k="org.regsOther" id="f-org-regsOther" value="${esc(S.org.regsOther)}" placeholder="Other laws or standards (optional)" aria-label="Other regulations"></div>
+ </div></div>
+ <div class="card"><h2 class="sec">About this assessment</h2><div class="fields">
+ ${fText("org.assessor","Assessor name","Your name")}
+ ${fSel("org.assessorRole","How you know the organization",AROLE,{ar:"لازم تذكر علاقتك بالمؤسسة، لأنها بتأثر على نوع الأدلة اللي عندك."})}
+ ${fText("org.date","Assessment date","",{type:"date"})}
+ </div></div>${stepnav("profile")}`;
+
+V.stakeholders=()=>{const row=(s,lv)=>{const x=S.sh[s.k]||{};return`<div class="shr"><div><b>${esc(s.l)}</b><small>${esc(s.d)}</small></div><input data-k="sh.${s.k}.who" id="f-sh-${s.k}" value="${esc(x.who||"")}" placeholder="Who holds this role here?" aria-label="${esc(s.l)}: who"><div class="opts" role="radiogroup" aria-label="${esc(s.l)}: role in IT governance">${lv.map((l,i)=>`<label class="opt o${i===3?3:i===0?"u":2}"><input type="radio" name="sh-${s.k}" value="${i}" data-k="sh.${s.k}.level" data-num ${x.level===i?"checked":""}><span>${l}</span></label>`).join("")}</div></div>`;};
+ return`${head("stakeholders","Stakeholders in IT governance","Requirement 2: map who takes part in IT governance to the lecture categories, and how involved each one really is.","حدد مين بيلعب كل دور عندكم، ودرجة مشاركته الفعلية في قرارات الـ IT: مش مشارك، بيتبلغ، بيتاخد رأيه، ولا بيقرر.")}
+ <section class="shl"><h2 class="sec">Internal</h2>${SH_IN.map(s=>row(s,LV_IN)).join("")}</section>
+ <section class="shl"><h2 class="sec">External</h2>${SH_EX.map(s=>row(s,LV_EX)).join("")}</section>${stepnav("stakeholders")}`;};
+
+V.raci=()=>`${head("raci","Decision rights (RACI)","Who actually decides? Mark each key IT decision. Every decision needs exactly one A; a “?” means the role is not formally defined.","لكل قرار: مين بينفذ (R)، مين بيتحاسب في الآخر (A، واحد بس)، مين بيتسأل (C)، مين بيتبلغ (I). لو الدور مش متحدد رسمياً اختار ؟ — وسجل الواقع مش المفروض.")}
+ <div class="row small"><span class="chip strong">R</span>Responsible: does the work <span class="chip weak">A</span>Accountable: answers for the outcome <span class="chip partial">C</span>Consulted before <span class="chip na">I</span>Informed after <span class="chip na">?</span>Not formally defined</div>
+ <div class="tw"><table class="raci"><thead><tr><th style="width:26%">Decision</th>${S.raci.roles.map((r,i)=>`<th><input data-k="raci.roles.${i}" id="f-role-${i}" value="${esc(r)}" aria-label="Role ${i+1} name"></th>`).join("")}<th>Status</th><th><span class="sr">Remove</span></th></tr></thead>
+ <tbody>${S.raci.rows.map((r,ri)=>`<tr><td><input data-k="raci.rows.${ri}.d" id="f-dec-${ri}" value="${esc(r.d)}" aria-label="Decision ${ri+1}"></td>${r.c.map((c,ci)=>`<td class="c"><select data-k="raci.rows.${ri}.c.${ci}" id="f-rc-${ri}-${ci}" aria-label="${esc(r.d)}: ${esc(S.raci.roles[ci])}">${RACI_OPTS.map(o=>`<option value="${o}" ${o===c?"selected":""}>${o||"–"}</option>`).join("")}</select></td>`).join("")}<td data-live="raci-${ri}"></td><td><button class="x" type="button" data-act="rmdec" data-i="${ri}" aria-label="Remove decision">×</button></td></tr>`).join("")}</tbody></table></div>
+ <div class="row"><button class="btn" type="button" data-act="adddec">Add a decision</button><span class="note">Rule from Slide 43: one accountable owner per decision prevents both duplicated effort and accountability gaps.</span></div>
+ <div class="card"><h3>Case to keep in mind (Slide 44)</h3><p class="muted">An ERP implementation stalls because no one knows who may approve scope changes: the sponsor, the steering committee or the CIO. Business units build workarounds. The root cause is a governance failure, not a technical one.</p>${ARHTML("لو قرار «تغيير نطاق المشروع» مالوش A واضح عندكم، ده نفس السيناريو بتاع الحالة.")}</div>${stepnav("raci")}`;
+
+V.policies=()=>`${head("policies","Documented IT policies","Requirement 3: which IT policies exist, and how far each one has moved through the policy lifecycle.","لكل سياسة اختار حالتها الحقيقية: مكتوبة ومش معتمدة غير معتمدة، والمعتمدة غير اللي اتعمل عليها توعية وبتتطبق.")}
+ <div class="card"><div class="row" style="justify-content:space-between"><h2 class="sec">Policy lifecycle position (Slide 10)</h2><span class="note" data-live="polsum"></span></div><div class="life" data-live="life"></div></div>
+ <div class="tw"><table class="pol"><thead><tr><th style="width:32%">Policy</th><th style="width:22%">Status</th><th style="width:16%">Owner</th><th>Evidence or reference</th><th><span class="sr">Remove</span></th></tr></thead><tbody>
+ ${S.pol.map((p,i)=>`<tr><td><input data-k="pol.${i}.name" id="f-pn-${i}" value="${esc(p.name)}" aria-label="Policy name"></td><td><select data-k="pol.${i}.status" id="f-ps-${i}" data-num aria-label="${esc(p.name)} status"><option value="" ${p.status==null?"selected":""}>Not assessed</option>${PST.map(s=>`<option value="${s.v}" ${p.status===s.v?"selected":""}>${s.l}</option>`).join("")}</select></td><td><input data-k="pol.${i}.owner" id="f-po-${i}" value="${esc(p.owner)}" placeholder="Owner" aria-label="Owner"></td><td><input data-k="pol.${i}.ref" id="f-pr-${i}" value="${esc(p.ref)}" placeholder="Document name, version, date" aria-label="Evidence"></td><td><button class="x" type="button" data-act="rmpol" data-i="${i}" aria-label="Remove policy">×</button></td></tr>`).join("")}
+ </tbody></table></div>
+ <div class="row"><button class="btn" type="button" data-act="addpol">Add a policy</button></div>
+ <div class="card"><h2 class="sec">Core components of a typical policy (Slide 8)</h2><p class="muted">Open the best policy the organization has. Which components does it contain?</p><div class="checks">${COMP.map(c=>`<label class="ck"><input type="checkbox" data-k="comp.${c.k}" ${S.comp[c.k]?"checked":""}>${c.l}</label>`).join("")}</div>${ARHTML("افتح أحسن سياسة موجودة وشوف فيها المكونات السبعة ولا لأ.")}</div>${stepnav("policies")}`;
+
+V.principles=()=>`${head("principles","The six ISO/IEC 38500 principles","Requirement 4: rate each statement on the evidence you have. A claim without a document counts as Partly.","جاوب على حسب الدليل اللي في إيدك. لو حد قالك «أيوه موجود» ومشفتش المستند، اختار Told (verbal only)، والأداة هتحطه في قائمة To verify.")}
+ <div class="pnav" role="navigation" aria-label="Principles">${PR.map(p=>`<button type="button" data-act="scrollp" data-k="${p.k}">${p.n}. ${p.name} <span data-live="prc-${p.k}"></span></button>`).join("")}</div>
+ ${PR.map(p=>`<section class="pblock" id="pp-${p.k}"><div class="phead"><div style="display:grid;gap:6px"><p class="eyebrow">Principle ${p.n} · Slide ${p.slide}</p><h2>${p.name}</h2><p class="pdef">${esc(p.def)}</p>${ARHTML(p.ar)}</div><div class="pscore" data-live="pr-${p.k}"></div></div><div class="qlist">${p.qs.map(qCard).join("")}</div></section>`).join("")}${stepnav("principles")}`;
+
+V.separation=()=>`${head("separation","Governance vs. management","Is deciding about IT separated from doing IT? COBIT splits governance (Evaluate, Direct, Monitor) from management (Align, Plan, Build, Run, Monitor).","السؤال هنا: مين بيقرر ومين بينفذ؟ لو نفس الشخص بيعمل الاتنين، ده دمج بين الـ Governance والـ Management، وبيمشي لحد ما الشركة تكبر أو يحصل حادث كبير.")}
+ <div class="grid3"><div class="card dark"><p class="eyebrow" style="color:var(--brass)">Governance</p><h3>What and why?</h3><p class="muted">Board or governance committee. Long-term direction, risk appetite, oversight. Fails as misaligned investment and unmanaged risk.</p></div>
+ <div class="card"><p class="eyebrow">Management</p><h3>How?</h3><p class="muted">CIO and operational teams. Projects, services, operations. Fails as missed deadlines, outages and budget overruns.</p></div>
+ <div class="card"><p class="eyebrow">Verdict for this organization</p><div data-live="sep"></div><p class="muted small">${S.org.itReports?`IT reports to ${esc(S.org.itReports)}.`:"Add the IT reporting line in the profile."}</p></div></div>
+ <div class="qlist">${GOVQ.map(qCard).join("")}</div>${stepnav("separation")}`;
+
+V.accountability=()=>`${head("accountability","Accountability and transparency","Which mechanisms make people answer for IT outcomes, and does the right information reach them?","المساءلة محتاجة شفافية: محدش يقدر يحاسب حد على حاجة مش شايفها. شوف الآليات دي موجودة فعلاً ولا على الورق بس.")}
+ <div class="grid3"><div class="card"><h3>Accountability</h3><p class="muted">The obligation to answer for the outcomes of technology decisions. Responsibility can be delegated; accountability for the outcome cannot be fully delegated away.</p></div>
+ <div class="card"><h3>Transparency</h3><p class="muted">The right information reaches the right stakeholders at the right time. It does not mean unlimited disclosure.</p></div>
+ <div class="card"><p class="eyebrow">Mechanisms score (Slide 56)</p><div data-live="acc"></div></div></div>
+ <div class="qlist">${ACCQ.map(qCard).join("")}</div>${stepnav("accountability")}`;
+
+V.evidence=()=>`${head("evidence","Evidence log","Record what you asked, who you asked and what you saw. Ask for documentation, not verbal assurance: governance maturity shows up in policies, logs and reports.","سجل مصادرك: مقابلات ومستندات وملاحظات. دي هتطلع في الـ References في التقرير زي ما Slide 63 طالبة.")}
+ <section class="qlist"><h2 class="sec">Guiding questions (Slide 61)</h2>${DC.map(d=>{const x=S.dc[d.k]||{};return`<div class="qc" data-a="${x.text?2:""}"><p class="qt">${esc(d.q)}</p>${ARHTML(d.ar)}<textarea data-k="dc.${d.k}.text" id="f-${d.k}" rows="2" placeholder="What you found">${esc(x.text||"")}</textarea><select data-k="dc.${d.k}.b" id="f-${d.k}-b" aria-label="Evidence basis" style="max-width:260px">${BASIS.map(b=>`<option value="${b.k}" ${(x.b||"")===b.k?"selected":""}>${b.l}</option>`).join("")}</select></div>`;}).join("")}</section>
+ <section class="card"><h2 class="sec">Interviews and documents</h2>
+ <div class="tw"><table style="min-width:760px"><thead><tr><th style="width:15%">Type</th><th style="width:28%">Person or document</th><th style="width:18%">Role or owner</th><th style="width:13%">Date</th><th>Note</th><th><span class="sr">Remove</span></th></tr></thead><tbody>
+ ${S.src.length?S.src.map((x,i)=>`<tr><td><select data-k="src.${i}.type" id="f-st-${i}" aria-label="Type">${SRC_TYPES.map(t=>`<option ${t===x.type?"selected":""}>${t}</option>`).join("")}</select></td><td><input data-k="src.${i}.name" id="f-sn-${i}" value="${esc(x.name)}" aria-label="Person or document"></td><td><input data-k="src.${i}.role" id="f-sr-${i}" value="${esc(x.role)}" aria-label="Role"></td><td><input data-k="src.${i}.date" id="f-sd-${i}" value="${esc(x.date)}" placeholder="Oct 2026" aria-label="Date"></td><td><input data-k="src.${i}.note" id="f-sx-${i}" value="${esc(x.note)}" aria-label="Note"></td><td><button class="x" type="button" data-act="rmsrc" data-i="${i}" aria-label="Remove source">×</button></td></tr>`).join(""):`<tr><td colspan="6" class="muted">No sources yet. Add each interview and document you rely on; they become the report’s references.</td></tr>`}
+ </tbody></table></div><div class="row"><button class="btn" type="button" data-act="addsrc">Add a source</button></div></section>${stepnav("evidence")}`;
+
+V.discussion=()=>{const M=metrics();const ir=invRow();const st=ir?raciStatus(ir):null;const b=S.sh.board;
+ return`${head("discussion","Executive discussion","Slide 58 asks the class to take a position on accountability. Use your organization’s data to ground it.","سؤال النقاش. اختار موقفك، والأداة هتساعدك تكتب إجابة مبنية على بيانات مؤسستك ومبدأ Responsibility.")}
+ <div class="card dark"><p class="eyebrow" style="color:var(--brass)">Discussion question</p><p class="quote">“Who should be responsible when an organization’s technology investment fails?”</p></div>
+ <div class="grid2"><div class="card"><h2 class="sec">Guiding points</h2>${GP.map((g,i)=>`<details class="gp" ${i===0?"open":""}><summary>${esc(g.t)}</summary><p>${esc(g.en)}</p>${ARHTML(g.ar)}</details>`).join("")}</div>
+ <div class="card"><h2 class="sec">What your data says</h2><ul class="list">
+  <li><span class="dot ${st&&st.s==="clear"?"strong":"weak"}"></span><span>${ir?(st.A.length===1?`<b>${esc(roleName(st.A[0]))}</b> is accountable for “${esc(ir.d)}”.`:`No single accountable owner for “${esc(ir.d)}”.`):"Map decision rights first."}</span></li>
+  <li><span class="dot ${b&&b.level>=2?"strong":"partial"}"></span><span>The board or owners are <b>${b&&b.level!=null?LV_IN[b.level].toLowerCase():"not yet mapped"}</b> in IT governance.</span></li>
+  <li><span class="dot ${eff(GOVQ[1])>=2?"strong":"weak"}"></span><span>IT risk appetite: <b>${eff(GOVQ[1])==null?"not assessed":eff(GOVQ[1])>=2?"set by the governing body":"not set by a governing body"}</b>.</span></li>
+  <li><span class="dot ${M.amb.length?"weak":"strong"}"></span><span>${M.amb.length?`${plural(M.amb.length,"area")} with ambiguous responsibility.`:"No ambiguous decision rights found."}</span></li>
+  <li><span class="dot ${M.pr.resp.rating}"></span><span>Responsibility principle: <b>${RL[M.pr.resp.rating]}</b>${M.pr.resp.pct!=null?` (${M.pr.resp.pct}%)`:""}.</span></li></ul></div></div>
+ <section class="card"><h2 class="sec">Your position</h2><div class="pos" role="radiogroup" aria-label="Your position">${POS.map(p=>`<label class="posc"><input type="radio" name="dpos" value="${p.k}" data-k="disc.pos" ${S.disc.pos===p.k?"checked":""}><b>${p.l}</b><span>${p.d}</span></label>`).join("")}</div>
+ <div class="fld"><label for="f-disc-text">Your answer</label><textarea id="f-disc-text" data-k="disc.text" rows="10" placeholder="Write your argument, or draft it from your data.">${esc(S.disc.text||"")}</textarea></div>
+ <div class="row"><button class="btn pri" type="button" data-act="draftdisc">${String(S.disc.text||"").trim()?"Replace with a draft from my data":"Draft from my data"}</button><button class="btn" type="button" data-act="copydisc">Copy answer</button></div></section>${stepnav("discussion")}`;};
+
+V.results=()=>{const M=metrics();const sv=sepVerdict(M);const mapped=M.raci.filter(x=>x.s!=="unmapped").length;
+ return`${head("results",`Results: ${esc(S.org.name||"Untitled")}`,"Generated from your answers. Strong ≥ 70%, Partial 40–69%, Weak below 40%. A principle needs at least half of its questions answered with evidence to be rated.","النتايج دي بتتحسب أوتوماتيك من إجاباتك. أي حاجة مش متأكد منها هتلاقيها في To verify.")}
+ <div class="tiles"><div class="tile lead"><span class="k">ISO/IEC 38500 average</span><span class="v">${M.idx==null?"–":M.idx+"%"}</span><span class="k">${M.counts.strong} strong · ${M.counts.partial} partial · ${M.counts.weak} weak${M.counts.na?` · ${M.counts.na} unrated`:""}</span></div>
+ <div class="tile"><span class="k">Governance vs. management</span><span class="v" style="font-size:20px">${sv[0]}</span>${M.gov.pct!=null?`<span class="k">${M.gov.pct}% on 4 checks</span>`:""}</div>
+ <div class="tile"><span class="k">Decision rights</span><span class="v">${M.clear.length}<span class="small muted"> / ${mapped}</span></span><span class="k">decisions with one clear owner</span></div>
+ <div class="tile"><span class="k">Written IT policies approved</span><span class="v">${M.pol.approved}<span class="small muted"> / ${M.pol.written}</span></span><span class="k">${M.pol.stage!=null?"Lifecycle: "+LIFE[M.pol.stage]:"Not assessed"}</span></div>
+ <div class="tile"><span class="k">To verify</span><span class="v">${M.verify.length}</span><span class="k">items need evidence</span></div></div>
+ <div class="card"><h2 class="sec">Scorecard by principle</h2>${bars(M)}</div>
+ <div class="grid2"><div class="card"><h2 class="sec">Strengths</h2>${M.strengths.length?`<ul class="list">${M.strengths.slice(0,8).map(x=>`<li><span class="dot strong"></span><span>${esc(x.text)} <span class="tag">${esc(x.lens)}</span></span></li>`).join("")}</ul>`:`<p class="muted">No strengths confirmed with evidence yet.</p>`}</div>
+ <div class="card"><h2 class="sec">Gaps</h2>${M.gaps.length?`<ul class="list">${M.gaps.slice(0,8).map(x=>`<li><span class="dot ${x.sev===0?"weak":"partial"}"></span><span>${esc(x.text)} <span class="tag">${esc(x.lens)}</span></span></li>`).join("")}</ul>`:`<p class="muted">No gaps identified yet.</p>`}</div></div>
+ <div class="card"><h2 class="sec">Requirement 5: where responsibility is clear, and where it is ambiguous</h2><div class="grid2"><div><p class="eyebrow">Clear</p><ul class="list">${M.clear.length?M.clear.map(x=>`<li><span class="dot strong"></span><span><b>${esc(x.d)}</b><br><span class="muted small">${esc(x.why)}</span></span></li>`).join(""):`<li><span class="dot na"></span><span class="muted">Nothing confirmed yet</span></li>`}</ul></div>
+ <div><p class="eyebrow">Ambiguous</p><ul class="list">${M.amb.length?M.amb.map(x=>`<li><span class="dot weak"></span><span><b>${esc(x.d)}</b><br><span class="muted small">${esc(x.why)}</span></span></li>`).join(""):`<li><span class="dot na"></span><span class="muted">Nothing flagged</span></li>`}</ul></div></div></div>
+ <div class="grid2"><div class="card"><h2 class="sec">Priority actions</h2>${M.recs.length?`<ol class="recs">${M.recs.map(r=>`<li>${esc(r)}</li>`).join("")}</ol>`:`<p class="muted">Answer more questions to generate actions.</p>`}</div>
+ <div class="card"><h2 class="sec">To verify before Part 2</h2>${M.verify.length?`<ul class="list">${M.verify.slice(0,12).map(v=>`<li><span class="dot na"></span><span>${esc(v.text)} <span class="tag">${esc(v.why)}</span></span></li>`).join("")}</ul>${M.verify.length>12?`<p class="note">And ${M.verify.length-12} more.</p>`:""}`:`<p class="muted">Nothing outstanding.</p>`}</div></div>
+ <div class="row"><a class="btn pri" href="#report">Build the report</a><button class="btn" type="button" data-act="present">Present the results</button></div>`;};
+
+V.report=()=>{const M=metrics();const B=reportBlocks(M);const wc=wordCount(B),pg=pageEstimate(B);
+ return`${head("report","Report and export","Part 1 deliverable: a business report of 3–4 pages, built from your answers and structured on Slides 62–63. Edit the summary and reflection in your own words, then download.","التقرير بيتكتب بالإنجليزي من إجاباتك. عدّل الملخص والتأمل بأسلوبك، ونزّله Word. خلي بالك من الحد الأقصى 3–4 صفحات.")}
+ <div class="card"><div class="toolbar"><button class="btn pri" type="button" data-act="docx" data-dl>Download Word (.docx)</button><button class="btn" type="button" data-act="md" data-dl>Download Markdown</button><button class="btn" type="button" data-act="copy">Copy text</button><span class="wc ${pg>4?"over":""}" id="wcount">${wc} words · about ${pg} pages</span></div>
+ <div class="toolbar"><button class="btn sm" type="button" data-act="json" data-dl>Export assessment (.json)</button><button class="btn sm" type="button" data-act="import">Import (.json)</button><span class="note" data-dlnote hidden>File downloads aren’t available in this view. Use Copy text instead.</span></div>
+ ${pg>4?`<p class="note" style="color:var(--weak)">Over the 4-page limit: shorten the summary or reflection, or answer fewer “Don’t know” items to trim the verify list.</p>`:""}</div>
+ <div class="grid2"><div class="card edit"><label class="lab" for="f-txt-summary">Executive summary</label><textarea id="f-txt-summary" data-k="txt.summary" rows="8" placeholder="${esc(autoSummary(M))}">${esc(S.txt.summary||"")}</textarea><div class="row"><button class="linkbtn" type="button" data-act="fillsum">Start from the generated text</button>${S.txt.summary?`<button class="linkbtn" type="button" data-act="resetsum">Use the generated text</button>`:""}</div><p class="note">Leave empty to use the generated summary shown in grey.</p></div>
+ <div class="card edit"><label class="lab" for="f-txt-reflection">Reflection (Requirement 5)</label><textarea id="f-txt-reflection" data-k="txt.reflection" rows="8" placeholder="${esc(autoReflection(M))}">${esc(S.txt.reflection||"")}</textarea><div class="row"><button class="linkbtn" type="button" data-act="fillref">Start from the generated text</button>${S.txt.reflection?`<button class="linkbtn" type="button" data-act="resetref">Use the generated text</button>`:""}</div><p class="note">The lecture asks for a short reflection in your own words.</p></div></div>
+ <textarea id="copyBuf" class="sr" aria-hidden="true" tabindex="-1"></textarea>
+ <article class="paper" id="paper">${blocksHTML(B)}</article>`;};
+
+/* ============ live refresh ============ */
+function refreshLive(){const M=metrics();
+ document.querySelectorAll("[data-live]").forEach(el=>{const k=el.dataset.live;
+  if(k.startsWith("pg-")){const p=progress(k.slice(3));if(!p){el.textContent="";return;}const d=p[0]>=p[1];el.className="pg"+(d?" done":"");el.textContent=d?"Done":`${p[0]}/${p[1]}`;}
+  else if(k.startsWith("pr-")){const s=M.pr[k.slice(3)];el.innerHTML=`<span>${s.pct==null?"–":s.pct+"%"}</span>${chip(s.rating)}`;}
+  else if(k.startsWith("prc-")){const s=M.pr[k.slice(4)];el.className="tag";el.textContent=s.pct==null?"–":s.pct+"%";}
+  else if(k.startsWith("cap-")){el.textContent=capText(k.slice(4));}
+  else if(k.startsWith("raci-")){const st=M.raci[+k.slice(5)];if(st){const x=RACI_ST[st.s];el.innerHTML=`<span class="chip ${x[1]}">${x[0]}</span>`;}}
+  else if(k==="life")el.innerHTML=lifeHTML(M.pol);
+  else if(k==="polsum"){const p=M.pol;el.textContent=p.assessed?`${p.written} written · ${p.approved} approved · ${p.assessed} of ${p.total} assessed`:"Set a status for each policy";}
+  else if(k==="sep"){const v=sepVerdict(M);el.innerHTML=`<p style="font-size:24px;font-weight:600">${v[0]}</p>${M.gov.pct!=null?`<p class="small muted">${M.gov.pct}% · ${chip(M.gov.rating)}</p>`:""}`;}
+  else if(k==="acc"){el.innerHTML=`<p style="font-size:24px;font-weight:600">${M.acc.pct==null?"–":M.acc.pct+"%"}</p>${chip(M.acc.rating)}`;}
+ });}
+
+/* ============ shell ============ */
+const main=$("#main");
+function cur(){const h=location.hash.slice(1);return STEPS.some(s=>s.k===h)?h:"brief";}
+function renderRail(){const k=cur();$("#rail").innerHTML=STEPS.map((s,i)=>`<a class="st" href="#${s.k}" ${s.k===k?'aria-current="page"':""}><span class="nb">${i||"·"}</span><span class="lb">${esc(s.l)}<small>${esc(s.ref)}</small></span><span class="pg" data-live="pg-${s.k}"></span></a>`).join("");}
+function renderCoSel(){const sel=$("#coSel");sel.innerHTML=Object.values(STORE.list).sort((a,b)=>b.updated-a.updated).map(s=>`<option value="${s.id}" ${s.id===STORE.cur?"selected":""}>${esc(s.org.name||"Untitled assessment")}</option>`).join("");}
+function render(){const k=cur();renderRail();renderCoSel();main.innerHTML=V[k]();$("#sampleBanner").hidden=!S.sample;refreshLive();updateDL();}
+function updateDL(){document.querySelectorAll("[data-dl]").forEach(b=>{b.disabled=!DL;b.title=DL?"":"File downloads aren’t available in this view";});document.querySelectorAll("[data-dlnote]").forEach(n=>n.hidden=!!DL);}
+let toastT=null;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2600);}
+function switchTo(id){if(!STORE.list[id])return;STORE.cur=id;S=STORE.list[id];persist();render();}
+function create(name){const s=blank(name);STORE.list[s.id]=s;STORE.cur=s.id;S=s;persist();if(location.hash==="#profile")render();else location.hash="profile";toast(`Started an assessment for ${name}`);}
+async function saveFile(filename,data){if(!DL){toast("File downloads aren’t available in this view.");return;}
+ try{const r=await DL.save({filename,data});toast(r&&r.status==="delivered"?"File sent.":"Saved "+filename);}
+ catch(e){const c=e&&e.code;toast(c==="declined"?"Download cancelled.":c==="rate_limited"?"A download prompt is already open.":"Couldn’t save the file"+(c?` (${c})`:"")+".");}}
+async function copyText(t){try{await navigator.clipboard.writeText(t);toast("Copied to the clipboard.");}catch(e){const b=$("#copyBuf")||document.createElement("textarea");b.value=t;if(!b.isConnected){b.className="sr";document.body.appendChild(b);}b.removeAttribute("aria-hidden");b.focus();b.select();let ok=false;try{ok=document.execCommand("copy");}catch(_){}toast(ok?"Copied to the clipboard.":"Press Ctrl+C (or ⌘C) to copy the selected text.");}}
+
+/* edits */
+function onEdit(e){const el=e.target;
+ if(el.dataset.reg!==undefined){const k=el.dataset.reg;const a=S.org.regs.filter(x=>x!==k);if(el.checked)a.push(k);S.org.regs=a;touch();return;}
+ const p=el.dataset.k;if(!p)return;
+ const discrete=el.type==="radio"||el.type==="checkbox"||el.tagName==="SELECT";
+ if(e.type==="input"&&discrete)return;if(e.type==="change"&&!discrete)return;
+ let v;if(el.type==="checkbox")v=el.checked;else if(el.dataset.num!==undefined)v=el.value===""?null:Number(el.value);else v=el.value;
+ setPath(p,v);touch();
+ if(p==="org.name")renderCoSel();
+ if(/^ans\.[a-z0-9]+\.a$/.test(p)){const card=el.closest(".qc");if(card)card.dataset.a=v==null?"":v;}
+ if(/^dc\./.test(p)&&p.endsWith(".text")){const card=el.closest(".qc");if(card)card.dataset.a=String(v).trim()?"2":"";}
+ if(p==="org.name"&&S.sample&&!/\(example\)/i.test(v)){S.sample=false;$("#sampleBanner").hidden=true;}
+ refreshLive();}
+main.addEventListener("input",onEdit);main.addEventListener("change",onEdit);
+main.addEventListener("submit",e=>{if(e.target.id==="newForm"){e.preventDefault();const n=$("#newName").value.trim();if(n)create(n);}});
+$("#coSel").addEventListener("change",e=>switchTo(e.target.value));
+$("#arTog").addEventListener("change",e=>{$("#app").classList.toggle("show-ar",e.target.checked);try{localStorage.setItem("govlens38500:ar",e.target.checked?"1":"0");}catch(_){}});
+$("#fileIn").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();
+ rd.onload=()=>{try{const o=JSON.parse(rd.result);const s=o&&o.org&&o.ans?o:(o&&o.assessment);if(!s||!s.org)throw new Error("shape");s.id=uid();s.updated=Date.now();normalize(s);STORE.list[s.id]=s;STORE.cur=s.id;S=s;persist();render();toast(`Imported ${s.org.name||"assessment"}`);}catch(err){toast("That file isn’t an assessment exported from this kit.");}};
+ rd.readAsText(f);e.target.value="";});
+
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+ const M=()=>metrics();
+ switch(a){
+ case"gonew":location.hash="brief";setTimeout(()=>{const n=$("#newName");if(n){n.focus();n.scrollIntoView({block:"center"});}},60);break;
+ case"open":switchTo(b.dataset.id);break;
+ case"del":{if(b.dataset.confirm!=="1"){b.dataset.confirm="1";b.textContent="Confirm delete";setTimeout(()=>{if(b.isConnected){b.dataset.confirm="";b.textContent="Delete";}},4000);break;}
+  const id=b.dataset.id;const nm=(STORE.list[id]&&STORE.list[id].org.name)||"assessment";delete STORE.list[id];
+  if(!Object.keys(STORE.list).length){const s=blank("");STORE.list[s.id]=s;}
+  if(!STORE.list[STORE.cur])STORE.cur=Object.values(STORE.list).sort((x,y)=>y.updated-x.updated)[0].id;S=STORE.list[STORE.cur];persist();render();toast(`Deleted ${nm}`);break;}
+ case"loadsample":{const s=makeSample();STORE.list[s.id]=s;switchTo(s.id);break;}
+ case"import":$("#fileIn").click();break;
+ case"addpol":S.pol.push({name:"New policy",status:null,owner:"",ref:""});touch();render();break;
+ case"rmpol":S.pol.splice(+b.dataset.i,1);touch();render();break;
+ case"addsrc":S.src.push({type:"Interview",name:"",role:"",date:"",note:""});touch();render();setTimeout(()=>{const x=$(`#f-sn-${S.src.length-1}`);if(x)x.focus();},30);break;
+ case"rmsrc":S.src.splice(+b.dataset.i,1);touch();render();break;
+ case"adddec":S.raci.rows.push({d:"New decision",c:S.raci.roles.map(()=>"")});touch();render();break;
+ case"rmdec":S.raci.rows.splice(+b.dataset.i,1);touch();render();break;
+ case"scrollp":{const el=document.getElementById("pp-"+b.dataset.k);if(el)el.scrollIntoView({block:"start"});break;}
+ case"draftdisc":{const t=$("#f-disc-text");const txt=draftDiscussion(M());S.disc.text=txt;if(!S.disc.pos)S.disc.pos="layered";touch();render();toast("Draft written from your data. Edit it in your own words.");break;}
+ case"copydisc":copyText(S.disc.text||draftDiscussion(M()));break;
+ case"fillsum":S.txt.summary=autoSummary(M());touch();render();break;
+ case"fillref":S.txt.reflection=autoReflection(M());touch();render();break;
+ case"resetsum":S.txt.summary="";touch();render();break;
+ case"resetref":S.txt.reflection="";touch();render();break;
+ case"copy":copyText(blocksText(reportBlocks(M())));break;
+ case"md":saveFile(`${slug(S.org.name)}-governance-diagnostic-part1.md`,blocksMD(reportBlocks(M())));break;
+ case"json":saveFile(`${slug(S.org.name)}-it-governance-assessment.json`,JSON.stringify(S,null,2));break;
+ case"docx":{if(!DL){toast("File downloads aren’t available in this view.");break;}b.disabled=true;const old=b.textContent;b.textContent="Building…";
+  try{const D=await loadDocx();const blob=await D.Packer.toBlob(buildDocx(D,reportBlocks(M())));await saveFile(`${slug(S.org.name)}-governance-diagnostic-part1.docx`,blob);}
+  catch(err){toast("Couldn’t build the Word file here. Use Markdown or Copy text instead.");}
+  b.disabled=false;b.textContent=old;break;}
+ case"present":openPresent();break;
+ case"pprev":go(-1);break;case"pnext":go(1);break;
+ case"pclose":closePresent();break;
+ case"pfull":{const el=$("#present");try{if(document.fullscreenElement)await document.exitFullscreen();else await el.requestFullscreen();}catch(_){toast("Full screen isn’t available here.");}break;}
+ }});
+
+/* ============ presentation ============ */
+let slides=[],si=0;
+function ft(n,t){return`<div class="ft"><span>${esc(S.org.name||"")} · IT Governance Diagnostic, Part 1</span><span>${String(n).padStart(2,"0")} / ${String(t).padStart(2,"0")}</span></div>`;}
+function clip(s,n){s=String(s||"").trim();if(s.length<=n)return s;const cut=s.slice(0,n);const i=Math.max(cut.lastIndexOf(". "),cut.lastIndexOf("; "));return i>n*.4?cut.slice(0,i+1).replace(/;$/,"."):cut.slice(0,cut.lastIndexOf(" "))+"…";}
+function pill(r,txt){return`<span class="pill ${r}">${esc(txt||RL[r])}</span>`;}
+function buildSlides(){const M=metrics(),o=S.org,sv=sepVerdict(M);const out=[];
+ out.push(c=>`<div class="sl dk"><div class="wm">38500</div><p class="eb">IT Policy &amp; Governance · Deliverable, Part 1</p><div style="flex:1"></div><h1>${esc(o.name||"Organization")}</h1><p style="font-size:2cqw;color:var(--sl-deep-muted);max-width:60cqw">IT governance diagnostic through the six ISO/IEC 38500 principles</p><div style="flex:.6"></div><div style="display:flex;justify-content:space-between;align-items:end;border-top:.1cqw solid var(--sl-deep-line);padding-top:1.4cqw"><div><b style="font-size:1.7cqw">${esc(o.assessor||"")}</b><p class="m">${esc(o.assessorRole||"")}</p></div><p class="m" style="font-family:var(--f-mono)">${esc(fmtDate(o.date))}</p></div></div>`);
+ out.push(c=>{const cells=[["Sector",o.sector],["Size",o.employees?o.employees+" employees":""],["Ownership",o.ownership],["Group structure",o.group||o.sites],["Nature of business",o.business],["IT function",[o.itHead,o.itTeam?`team of ${o.itTeam}`:"",o.itReports?`reports to ${o.itReports}`:""].filter(Boolean).join(", ")]];
+  return`<div class="sl"><p class="eb">Requirement 1 · The organization</p><h2>${esc(o.name||"Organization")} at a glance</h2><div class="g" style="grid-template-columns:repeat(3,1fr);flex:1">${cells.map((x,i)=>`<div class="c${i===0?" d":""}"><span class="lbl">${x[0]}</span><span class="${i===0?"big":""}">${esc(x[1]||"Not stated")}</span></div>`).join("")}</div>${ft(c.n,c.t)}</div>`;});
+ out.push(c=>{const li=(arr,lv)=>arr.map(s=>{const x=S.sh[s.k]||{};return`<div style="display:grid;grid-template-columns:1fr auto;gap:1cqw;align-items:center;border-top:.1cqw solid var(--sl-line);padding-top:.6cqw"><span><b>${esc(x.who||"—")}</b><br><span class="m" style="font-size:1.15cqw">${esc(s.l)}</span></span>${x.level!=null?pill(x.level===3?"strong":x.level===2?"partial":"na",lv[x.level]):pill("na","—")}</div>`;}).join("");
+  return`<div class="sl"><p class="eb">Requirement 2 · Stakeholders</p><h2>Stakeholders mapped to lecture categories</h2><div class="g" style="grid-template-columns:1.2fr 1fr;flex:1"><div class="c" style="gap:.5cqw"><span class="lbl">Internal</span>${li(SH_IN,LV_IN)}</div><div class="c" style="gap:.5cqw"><span class="lbl">External</span>${li(SH_EX,LV_EX)}</div></div>${ft(c.n,c.t)}</div>`;});
+ out.push(c=>`<div class="sl"><p class="eb">Requirement 2 · Decision rights</p><h2>Who actually decides: the observed RACI</h2><table><tr><th>Decision</th>${S.raci.roles.map(r=>`<th style="text-align:center">${esc(r)}</th>`).join("")}<th>Status</th></tr>${S.raci.rows.slice(0,8).map((r,i)=>`<tr><td>${esc(r.d)}</td>${r.c.map(x=>`<td class="cc" style="color:${x==="?"?"var(--sl-rust)":x===""?"var(--sl-muted)":x==="A"||x==="A/R"?"var(--sl-ink)":"var(--sl-green)"}">${esc(x||"–")}</td>`).join("")}<td>${pill(RACI_ST[M.raci[i].s][1],RACI_ST[M.raci[i].s][0])}</td></tr>`).join("")}</table><p style="font-size:1.4cqw"><b>${M.clear.length} of ${M.raci.filter(x=>x.s!=="unmapped").length}</b> key decisions have one clear accountable owner. R responsible · A accountable · C consulted · I informed · ? not formally defined.</p>${ft(c.n,c.t)}</div>`);
+ out.push(c=>`<div class="sl"><p class="eb">Lecture link · Governance vs. management</p><h2>Governance and management: ${esc(sv[0].toLowerCase())}</h2><div class="g" style="grid-template-columns:1fr 1fr"><div class="c d"><span class="lbl">Governance · Evaluate, Direct, Monitor</span><span>What and why: direction, risk appetite, oversight</span></div><div class="c d"><span class="lbl">Management · Plan, Build, Run, Monitor</span><span>How: projects, services, operations</span></div></div><div class="g" style="grid-template-columns:1fr 1fr">${GOVQ.map(q=>{const v=eff(q);const r=v==null?"na":v<0?"na":v>=2?"strong":"weak";return`<div class="c"><span>${pill(r,v==null?"Not assessed":v<0?"To verify":v>=2?"In place":"Gap")}</span><span>${esc(v!=null&&v>=2?q.s:q.w)}</span></div>`;}).join("")}</div>${ft(c.n,c.t)}</div>`);
+ out.push(c=>{const p=M.pol;const lf=p.stage==null?"":LIFE.map((l,i)=>`<div class="${i<p.stage?"done":i===p.stage?"here":"next"}"><span style="font-family:var(--f-mono);font-size:1cqw">${String(i+1).padStart(2,"0")}</span>${l}</div>`).join("");
+  const wr=S.pol.filter(x=>x.status>=2);
+  return`<div class="sl"><p class="eb">Requirement 3 · Documented IT policies</p><h2>${p.assessed?`${p.written} written, ${p.approved} approved`:"IT policies not yet assessed"}</h2>${lf?`<div class="lf">${lf}</div>`:""}<div class="g" style="grid-template-columns:1.3fr 1fr;flex:1"><div class="c"><span class="lbl">Written policies</span>${wr.length?`<ul>${wr.slice(0,7).map(x=>`<li>${esc(x.name)}: <span class="m">${esc(PST[x.status].l.toLowerCase())}</span></li>`).join("")}</ul>`:`<span class="m">None found</span>`}</div><div class="c d"><span class="lbl">Why approval matters (Slide 11)</span><ul><li>Unapproved rules cannot be enforced</li><li>Auditors see no approved control evidence</li><li>Each unit applies the rules its own way</li></ul></div></div>${ft(c.n,c.t)}</div>`;});
+ out.push(c=>`<div class="sl"><p class="eb">Requirement 4 · ISO/IEC 38500 scorecard</p><h2>Preliminary rating on the six principles</h2><div class="g" style="grid-template-columns:repeat(3,1fr);flex:1">${PR.map(p=>{const s=M.pr[p.k];const col=s.rating==="strong"?"var(--sl-green)":s.rating==="partial"?"var(--sl-brass-ink)":s.rating==="weak"?"var(--sl-rust)":"#7C8A84";return`<div class="c" style="border-top:.4cqw solid ${col}"><span class="lbl" style="color:var(--sl-muted)">Principle ${p.n}</span><span class="big">${p.name}</span><div class="bar"><i style="width:${s.pct||0}%;background:${col}"></i></div><span>${pill(s.rating)} <b style="font-family:var(--f-mono)">${s.pct==null?"":s.pct+"%"}</b></span>${(()=>{const g=p.qs.filter(q=>{const v=eff(q);return v===0||v===1;}).sort((a,b)=>eff(a)-eff(b))[0];const st=p.qs.find(q=>eff(q)===3);return`${st?`<span style="font-size:1.2cqw"><b style="color:var(--sl-green)">+</b> ${esc(st.s)}</span>`:""}${g?`<span style="font-size:1.2cqw"><b style="color:var(--sl-rust)">−</b> ${esc(g.w)}</span>`:""}`;})()}</div>`;}).join("")}</div>${ft(c.n,c.t)}</div>`);
+ out.push(c=>`<div class="sl"><p class="eb">Requirement 4 · Summary</p><h2>Strengths to build on, gaps to close</h2><div class="g" style="grid-template-columns:1fr 1fr;flex:1"><div class="c"><span class="lbl" style="color:var(--sl-green)">Strengths</span><ul>${(M.strengths.slice(0,5).map(x=>`<li>${esc(x.text)}</li>`).join(""))||"<li>None confirmed yet</li>"}</ul></div><div class="c d"><span class="lbl">Gaps</span><ul>${(M.gaps.slice(0,5).map(x=>`<li>${esc(x.text)}</li>`).join(""))||"<li>None identified yet</li>"}</ul></div></div>${ft(c.n,c.t)}</div>`);
+ out.push(c=>`<div class="sl br"><p class="eb">Requirement 5 · Reflection</p><h2>Where responsibility is clear, and where it is ambiguous</h2><div class="g" style="grid-template-columns:1fr 1.2fr;flex:1"><div class="c d"><span class="lbl">Clear</span><ul>${M.clear.length?M.clear.slice(0,6).map(x=>`<li>${esc(x.d)}</li>`).join(""):"<li>Nothing confirmed yet</li>"}</ul></div><div class="c" style="background:#F4E6C6;border-color:var(--sl-ink)"><span class="lbl" style="color:var(--sl-ink)">Ambiguous</span><ul>${M.amb.length?M.amb.slice(0,6).map(x=>`<li>${esc(x.d)}: <span class="m">${esc(x.why)}</span></li>`).join(""):"<li>Nothing flagged</li>"}</ul></div></div>${ft(c.n,c.t)}</div>`);
+ out.push(c=>`<div class="sl"><p class="eb">Lecture link · Accountability &amp; transparency</p><h2>Accountability mechanisms in place: ${M.acc.pct==null?"not assessed":M.acc.pct+"%"}</h2><table><tr><th style="width:62%">Mechanism (Slide 56)</th><th>Status</th></tr>${ACCQ.map(q=>{const v=eff(q);return`<tr><td>${esc(q.s)}</td><td>${v==null?pill("na","Not assessed"):v<0?pill("na","To verify"):v>=2?pill(v===3?"strong":"partial",v===3?"In place":"Partly"):pill("weak",v===1?"Informal":"Missing")}</td></tr>`;}).join("")}</table><p style="font-size:1.4cqw">Stakeholders cannot hold anyone to account for outcomes they cannot see.</p>${ft(c.n,c.t)}</div>`);
+ out.push(c=>{const t=(S.disc.text||draftDiscussion(M)).split(/\n\n/);const pos=POS.find(p=>p.k===(S.disc.pos||"layered"));
+  return`<div class="sl dk"><p class="eb">Executive discussion · Slide 58</p><h2 style="max-width:70cqw">“Who should be responsible when a technology investment fails?”</h2><div class="g" style="grid-template-columns:.8fr 1.6fr;flex:1"><div class="c" style="background:var(--sl-brass);border-color:var(--sl-brass);color:var(--sl-ink)"><span class="lbl" style="color:var(--sl-ink)">My position</span><span class="big">${esc(pos.l)}</span><span>${esc(pos.d)}</span></div><div class="c d" style="background:#1A2D26;border-color:#1A2D26"><span class="lbl">Argument</span><p style="font-size:1.35cqw">${esc(clip(t[0],420))}</p>${t[2]?`<p style="font-size:1.25cqw;color:var(--sl-deep-muted)">${esc(clip(t[2],460))}</p>`:t[1]?`<p style="font-size:1.25cqw;color:var(--sl-deep-muted)">${esc(clip(t[1],460))}</p>`:""}</div></div>${ft(c.n,c.t)}</div>`;});
+ out.push(c=>`<div class="sl"><p class="eb">Next steps · Input to Part 2</p><h2>Priority actions</h2><div class="g" style="grid-template-columns:1.6fr 1fr;flex:1"><div class="c"><ol style="font-size:1.45cqw">${(M.recs.map(r=>`<li>${esc(r)}</li>`).join(""))||"<li>Answer more questions to generate actions</li>"}</ol></div><div class="c d"><span class="lbl">Evidence still to collect</span><span class="big" style="font-size:5cqw;color:var(--sl-brass)">${M.verify.length}</span><span class="m">items marked “verify”, “don’t know” or verbal only</span></div></div>${ft(c.n,c.t)}</div>`);
+ out.push(c=>`<div class="sl dk"><p class="eb">Discussion</p><div style="flex:1"></div><h1>Questions and discussion</h1><div class="g" style="grid-template-columns:repeat(4,1fr)">${["strong","partial","weak","na"].map(r=>`<div style="border-top:.3cqw solid ${r==="strong"?"#5FBF98":r==="partial"?"var(--sl-brass)":r==="weak"?"#E07A66":"#5A6862"};padding-top:1cqw"><span style="font-family:var(--f-display);font-size:6cqw;font-weight:600">${M.counts[r]}</span><p class="m" style="font-family:var(--f-mono);font-size:1cqw;text-transform:uppercase;letter-spacing:.15cqw">${r==="na"?"Not rated":"Rated "+RL[r].toLowerCase()}</p></div>`).join("")}</div>${ft(c.n,c.t)}</div>`);
+ return out;}
+function openPresent(){slides=buildSlides();si=0;$("#present").hidden=false;showSlide();document.addEventListener("keydown",pkey);}
+function closePresent(){$("#present").hidden=true;document.removeEventListener("keydown",pkey);try{if(document.fullscreenElement)document.exitFullscreen();}catch(_){}}
+function showSlide(){const t=slides.length;$("#stage").innerHTML=slides[si]({n:si+1,t});$("#pcount").textContent=`${si+1} / ${t}`;}
+function go(d){si=Math.max(0,Math.min(slides.length-1,si+d));showSlide();}
+function pkey(e){if(e.key==="Escape")closePresent();else if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();go(1);}else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(-1);}}
+$("#stage").addEventListener("click",e=>{const r=e.currentTarget.getBoundingClientRect();go(e.clientX<r.left+r.width/3?-1:1);});
+
+/* ============ boot ============ */
+try{const ar=localStorage.getItem("govlens38500:ar");if(ar==="0"){$("#arTog").checked=false;$("#app").classList.remove("show-ar");}}catch(_){}
+loadStore();setSave("saved");
+window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0);});
+render();
+(async()=>{try{if(window.claude&&typeof window.claude.use==="function")DL=await window.claude.use("downloads");}catch(_){DL=null;}updateDL();})();
+})();
+</script>
