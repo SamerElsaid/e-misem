@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>E-MISEM Management System</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f1ea;--p:#fff;--p2:#efeadd;--tx:#14233b;--mu:#5b6b82;--g:#9a7424;--ok:#17855a;--bad:#c2433f;--wr:#b27a0c;--bd:#d9d2c0;--sb:#081a33}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1a31;--p:#0f2240;--p2:#142b50;--tx:#f1ece0;--mu:#9fb0c8;--g:#c9a55c;--ok:#4cc38a;--bad:#ef6b6b;--wr:#f0b64a;--bd:#2a4268}}
+:root[data-theme="dark"]{--bg:#0a1a31;--p:#0f2240;--p2:#142b50;--tx:#f1ece0;--mu:#9fb0c8;--g:#c9a55c;--ok:#4cc38a;--bad:#ef6b6b;--wr:#f0b64a;--bd:#2a4268}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:500;margin:0}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+nav{background:var(--sb);color:#e9e3d3;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+nav .brand{font-family:Georgia,serif;font-size:21px;color:#d8b46a;padding:0 10px 4px}
+nav small{display:block;padding:0 10px 18px;color:#8ea2c0}
+nav a{display:flex;gap:10px;align-items:center;padding:10px;border-radius:8px;color:inherit;text-decoration:none;margin-bottom:2px}
+nav a:hover{background:#13294b}nav a.on{background:#1b355d;box-shadow:inset 3px 0 #d8b46a}
+nav a span{width:22px;text-align:center;color:#d8b46a}
+nav button{margin:14px 10px 0;background:none;border:1px solid #2c4670;color:#c9d4e6;border-radius:8px;padding:7px 12px;cursor:pointer}
+main{padding:28px 32px 60px;max-width:1180px;width:100%}
+.top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end;margin-bottom:22px}
+.top p{margin:4px 0 0;color:var(--mu)}
+.card{background:var(--p);border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:16px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.kpi b{font:500 34px Georgia,serif;color:var(--g);display:block}
+.kpi span{color:var(--mu);font-size:13px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flow i{padding:6px 12px;border:1px solid var(--g);border-radius:99px;font-style:normal;font-size:13px}
+.flow u{text-decoration:none;color:var(--mu)}
+table{width:100%;border-collapse:collapse}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--bd);font-size:14px;white-space:nowrap}
+th{color:var(--mu);font-weight:500;font-size:13px}
+.b{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;border:1px solid}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.wr{color:var(--wr)}.mu{color:var(--mu)}
+button.btn,.btn{background:var(--g);color:#fff;border:0;border-radius:7px;padding:7px 14px;cursor:pointer;font:inherit;font-size:13px}
+button.alt{background:none;border:1px solid var(--bd);color:var(--tx)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed}
+input,select{background:var(--p2);color:var(--tx);border:1px solid var(--bd);border-radius:7px;padding:7px 10px;font:inherit;font-size:14px;max-width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.row label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mu)}
+.bar{height:8px;background:var(--p2);border-radius:9px;overflow:hidden;min-width:90px}
+.bar div{height:100%;background:var(--g);border-radius:9px;transition:width .4s}
+.note{border-left:3px solid var(--g);padding:10px 14px;background:var(--p2);border-radius:0 8px 8px 0;color:var(--mu);margin-bottom:16px}
+.two{display:grid;gap:16px;grid-template-columns:320px 1fr}
+.sl{display:grid;grid-template-columns:1fr 44px;gap:4px 10px;align-items:center;margin-bottom:12px;font-size:14px}
+.sl input{grid-column:1/3;padding:0;accent-color:var(--g)}
+details.ap{border-bottom:1px solid var(--bd);padding:10px 0}
+details.ap summary{display:grid;grid-template-columns:34px 1fr 120px 100px;gap:10px;align-items:center;cursor:pointer;list-style:none}
+.rank{font:500 20px Georgia,serif;color:var(--g)}
+.ex{padding:10px 0 0 44px;display:grid;gap:6px}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));right:20px;background:var(--sb);color:#f1ece0;border:1px solid #d8b46a;padding:10px 16px;border-radius:8px;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:9}
+.toast.s{opacity:1;transform:none}
+@media(max-width:860px){.app{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px;padding:12px}nav .brand,nav small{width:100%}main{padding:20px 14px 50px}.two{grid-template-columns:1fr}details.ap summary{grid-template-columns:30px 1fr 80px}details.ap summary>:last-child{display:none}.ex{padding-left:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<div class="app">
+<nav id="nav"></nav>
+<main id="main"></main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SLOTS=[];["Sun","Mon","Tue"].forEach(d=>["09:00","11:00","13:00"].forEach(t=>SLOTS.push(d+" "+t)));
+const EXSLOTS=["Wed 09:00","Wed 12:00","Thu 09:00","Thu 12:00"];
+const S={
+ w:{gpa:30,exp:20,mg:20,cert:10,int:20},
+ ap:[
+ [1,"Ahmed Hassan","M",3.6,8,4,3,85,"Pending"],[2,"Mona Adel","F",3.8,6,3,2,90,"Pending"],
+ [3,"Karim Fathy","M",3.1,10,6,4,72,"Pending"],[4,"Nour Samir","F",3.4,5,2,1,80,"Pending"],
+ [5,"Omar Khaled","M",2.9,4,1,1,65,"Pending"],[6,"Heba Mostafa","F",3.7,9,5,3,88,"Accepted"],
+ [7,"Tarek Nabil","M",3.3,7,4,2,78,"Accepted"],[8,"Salma Youssef","F",3.5,3,1,2,70,"Pending"],
+ [9,"Yara Ali","F",3.2,6,3,3,82,"Accepted"]].map(a=>({id:a[0],name:a[1],g:a[2],gpa:a[3],exp:a[4],mg:a[5],cert:a[6],int:a[7],st:a[8]})),
+ courses:[
+ {c:"C101",n:"Software Engineering Practices",pre:"",cap:20,ins:"Dr. Adel",slot:"Sun 09:00",eq:"Projector",room:null,enr:[6,7,9]},
+ {c:"C102",n:"Data Management",pre:"",cap:15,ins:"Dr. Mona",slot:"Sun 11:00",eq:"Lab",room:null,enr:[6,7]},
+ {c:"C201",n:"Applied Machine Learning",pre:"C102",cap:12,ins:"Dr. Adel",slot:"Sun 09:00",eq:"Lab",room:null,enr:[]},
+ {c:"C202",n:"Enterprise Architecture",pre:"C101",cap:25,ins:"Dr. Salah",slot:"Mon 09:00",eq:"Projector",room:null,enr:[]}],
+ rooms:[{r:"Hall A",cap:30,eq:["Projector"]},{r:"Lab 1",cap:16,eq:["Lab","Projector"]},{r:"Room 3",cap:12,eq:[]}],
+ marks:{C101:{6:82,7:74,9:68},C102:{6:88,7:45}},
+ rs:{C101:"Published",C102:"Draft",C201:"Draft",C202:"Draft"},
+ exams:[{id:1,c:"C101",slot:"Wed 09:00",room:"Hall A",ex:"Dr. Adel"},{id:2,c:"C102",slot:"Wed 09:00",room:"Lab 1",ex:"Dr. Mona"}],
+ nid:10,xid:3,theme:null};
+const course=c=>S.courses.find(x=>x.c===c);
+const stu=()=>S.ap.filter(a=>a.st==="Accepted");
+const name=id=>(S.ap.find(a=>a.id==id)||{}).name;
+const GR=m=>m>=90?["A",4]:m>=80?["B",3]:m>=70?["C",2]:m>=60?["D",1]:["F",0];
+const gpaOf=id=>{let p=[];for(const c in S.marks)if(S.marks[c][id]!=null&&S.rs[c]!=="Draft")p.push(GR(S.marks[c][id])[1]);return p.length?(p.reduce((a,b)=>a+b)/p.length).toFixed(2):"–"};
+function score(a){const w=S.w,t=Object.values(w).reduce((x,y)=>x+y,0)||1;
+ const p={"GPA":w.gpa*a.gpa/4*100,"Experience":w.exp*Math.min(a.exp/10,1)*100,"Management":w.mg*Math.min(a.mg/6,1)*100,"Certifications":w.cert*Math.min(a.cert/4,1)*100,"Interview":w.int*a.int};
+ for(const k in p)p[k]/=t;return{p,s:Object.values(p).reduce((x,y)=>x+y,0)}}
+const cls=s=>s>=75?["Strong match","ok"]:s>=62?["Needs review","wr"]:["Weak match","bad"];
+function toast(m){const t=$("toast");t.textContent=m;t.className="toast s";clearTimeout(toast.h);toast.h=setTimeout(()=>t.className="toast",2200)}
+function instConf(){const o=[];S.courses.forEach((a,i)=>S.courses.forEach((b,j)=>{if(j>i&&a.ins===b.ins&&a.slot===b.slot)o.push([a.c,b.c,a.ins,a.slot])}));return o}
+function examConf(e){const f=[];S.exams.forEach(o=>{if(o.id===e.id||o.slot!==e.slot)return;
+ if(o.room===e.room)f.push("Room "+e.room+" double-booked");
+ if(o.ex===e.ex)f.push("Examiner "+e.ex+" double-booked");
+ const sh=course(e.c).enr.filter(x=>course(o.c).enr.includes(x));if(sh.length)f.push(sh.map(name).join(", ")+" sit two exams at once")});return[...new Set(f)]}
+const V={
+dashboard(){const ac=stu().length,en=S.courses.reduce((a,c)=>a+c.enr.length,0),cf=instConf().length+S.exams.filter(e=>examConf(e).length).length;
+ const st=["Pending","Accepted","Rejected"].map(s=>[s,S.ap.filter(a=>a.st===s).length]);
+ return`<div class="top"><div><h1>Dashboard</h1><p>One platform from applicant to academic record.</p></div></div>
+ <div class="grid">${[["Applicants",S.ap.length],["Admitted students",ac],["Course enrollments",en],["Open conflicts",cf]].map(k=>`<div class="card kpi"><b>${k[1]}</b><span>${k[0]}</span></div>`).join("")}</div>
+ <div class="card"><h3>End-to-end lifecycle</h3><p class="mu">Follow one applicant through every subsystem.</p><div class="flow">${["Applicant","Application","AI-assisted evaluation","Admission","Student registration","Course enrollment","Course and room allocation","Examination","Results","Academic record"].map(x=>`<i>${x}</i>`).join("<u>›</u>")}</div></div>
+ <div class="card"><h3>Admission pipeline</h3>${st.map(s=>`<div style="display:grid;grid-template-columns:90px 1fr 30px;gap:10px;align-items:center;margin:10px 0"><span>${s[0]}</span><div class="bar"><div style="width:${s[1]/S.ap.length*100}%"></div></div><b>${s[1]}</b></div>`).join("")}</div>
+ <div class="card"><h3>Course capacity</h3>${S.courses.map(c=>`<div style="display:grid;grid-template-columns:230px 1fr 60px;gap:10px;align-items:center;margin:10px 0"><span>${c.c} ${esc(c.n)}</span><div class="bar"><div style="width:${c.enr.length/c.cap*100}%"></div></div><span class="mu">${c.enr.length}/${c.cap}</span></div>`).join("")}</div>`},
+admission(){return`<div class="top"><div><h1>Admission and students</h1><p>Registration, applications, and decisions by authorized staff.</p></div></div>
+ <div class="card"><h3>New application</h3><div class="row" style="margin-top:10px">
+ <label>Full name<input id="n_name"></label><label>Gender<select id="n_g"><option>F</option><option>M</option></select></label>
+ <label>GPA (0–4)<input id="n_gpa" type="number" step=".1" min="0" max="4" value="3.2" style="width:80px"></label>
+ <label>Experience (yrs)<input id="n_exp" type="number" min="0" value="5" style="width:80px"></label>
+ <label>Management (yrs)<input id="n_mg" type="number" min="0" value="2" style="width:80px"></label>
+ <label>Certifications<input id="n_cert" type="number" min="0" value="1" style="width:80px"></label>
+ <label>Interview (0–100)<input id="n_int" type="number" min="0" max="100" value="75" style="width:90px"></label>
+ <button class="btn" onclick="addAp()">Submit application</button></div></div>
+ <div class="card tw"><table><tr><th>Applicant</th><th>GPA</th><th>Experience</th><th>Interview</th><th>Status</th><th>Decision</th></tr>
+ ${S.ap.map(a=>`<tr><td>${esc(a.name)}</td><td>${a.gpa}</td><td>${a.exp} yrs</td><td>${a.int}</td><td><span class="b ${a.st==="Accepted"?"ok":a.st==="Rejected"?"bad":"wr"}">${a.st}</span></td>
+ <td><button class="btn" ${a.st==="Accepted"?"disabled":""} onclick="decide(${a.id},'Accepted')">Accept</button> <button class="btn alt" ${a.st==="Rejected"?"disabled":""} onclick="decide(${a.id},'Rejected')">Reject</button></td></tr>`).join("")}</table></div>`},
+ai(){const L=S.ap.map(a=>({a,...score(a)})).sort((x,y)=>y.s-x.s);
+ const gs=["F","M"].map(g=>{const m=L.filter(x=>x.a.g===g),r=m.filter(x=>x.s>=75).length;return{g,n:m.length,avg:m.length?m.reduce((t,x)=>t+x.s,0)/m.length:0,rate:m.length?r/m.length:0}});
+ const hi=Math.max(...gs.map(x=>x.rate)),ratio=hi?Math.min(...gs.map(x=>x.rate))/hi:1;
+ return`<div class="top"><div><h1>AI-assisted applicant selection</h1><p>Scores and ranks applicants against admission criteria.</p></div></div>
+ <div class="note">Decision support only. The score is advice; accepting or rejecting stays with authorized staff.</div>
+ <div class="two"><div><div class="card"><h3>Criteria weights</h3><p class="mu" style="margin-top:4px">Move a slider and the ranking updates.</p>
+ ${[["gpa","Undergraduate GPA"],["exp","Professional experience"],["mg","Management experience"],["cert","Certifications"],["int","Interview score"]].map(k=>`<div class="sl"><label for="w_${k[0]}">${k[1]}</label><b id="wv_${k[0]}">${S.w[k[0]]}</b><input id="w_${k[0]}" type="range" min="0" max="50" value="${S.w[k[0]]}" oninput="setW('${k[0]}',this.value)"></div>`).join("")}</div>
+ <div class="card"><h3>Fairness audit</h3><p class="mu" style="margin-top:4px">Share of each group scoring 75 or higher.</p>
+ ${gs.map(x=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><span>${x.g==="F"?"Female":"Male"} (${x.n})</span><span>${(x.rate*100).toFixed(0)}% · avg ${x.avg.toFixed(1)}</span></div><div class="bar"><div style="width:${x.rate*100}%"></div></div></div>`).join("")}
+ <p class="${ratio>=.8?"ok":"bad"}"><b>Impact ratio ${ratio.toFixed(2)}</b> – ${ratio>=.8?"passes the four-fifths rule.":"below 0.80. Review these weights before relying on the ranking."}</p></div></div>
+ <div class="card"><h3>Ranking</h3><p class="mu" style="margin-top:4px">Open an applicant to see why they scored this way.</p>
+ ${L.map((x,i)=>{const c=cls(x.s);return`<details class="ap"><summary><span class="rank">${i+1}</span><span>${esc(x.a.name)}</span><span><b>${x.s.toFixed(1)}</b> <span class="mu">/ 100</span></span><span class="b ${c[1]}">${c[0]}</span></summary>
+ <div class="ex">${Object.entries(x.p).map(([k,v])=>`<div style="display:grid;grid-template-columns:120px 1fr 40px;gap:8px;align-items:center"><span class="mu">${k}</span><div class="bar"><div style="width:${v/(x.s||1)*100}%"></div></div><span>${v.toFixed(1)}</span></div>`).join("")}
+ <div>Status: <span class="b ${x.a.st==="Accepted"?"ok":x.a.st==="Rejected"?"bad":"wr"}">${x.a.st}</span> <button class="btn" onclick="decide(${x.a.id},'Accepted')">Accept</button> <button class="btn alt" onclick="decide(${x.a.id},'Rejected')">Reject</button></div></div></details>`}).join("")}</div></div>`},
+courses(){const sts=stu();return`<div class="top"><div><h1>Course management</h1><p>Catalog, prerequisites, capacity, and enrollment.</p></div></div>
+ <div class="card"><h3>Enroll a student</h3><div class="row" style="margin-top:10px"><label>Student<select id="e_s">${sts.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select></label>
+ <label>Course<select id="e_c">${S.courses.map(c=>`<option value="${c.c}">${c.c} · ${esc(c.n)}</option>`).join("")}</select></label><button class="btn" onclick="enroll()">Enroll student</button></div></div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${S.courses.map(c=>`<div class="card"><h3>${c.c} · ${esc(c.n)}</h3><p class="mu" style="margin:4px 0 12px">${c.ins} · ${c.slot} · Prerequisite: ${c.pre||"none"}</p>
+ <div class="bar"><div style="width:${c.enr.length/c.cap*100}%"></div></div><p class="mu">${c.enr.length} of ${c.cap} seats taken</p>
+ <div>${c.enr.length?c.enr.map(i=>`<span class="b" style="margin:0 4px 4px 0">${esc(name(i))}</span>`).join(""):'<span class="mu">No students enrolled yet.</span>'}</div></div>`).join("")}</div>`},
+rooms(){const ic=instConf();return`<div class="top"><div><h1>Room allocation</h1><p>Rooms matched by capacity, equipment, and time.</p></div><button class="btn" onclick="autoRooms()">Allocate rooms automatically</button></div>
+ ${ic.map(x=>`<div class="note bad">Instructor conflict: ${x[2]} teaches ${x[0]} and ${x[1]} at ${x[3]}. Move one of them to another slot.</div>`).join("")}
+ <div class="card tw"><table><tr><th>Course</th><th>Instructor</th><th>Time slot</th><th>Needs</th><th>Seats</th><th>Room</th></tr>
+ ${S.courses.map(c=>`<tr><td>${c.c} ${esc(c.n)}</td><td>${c.ins}</td><td><select onchange="setSlot('${c.c}',this.value)">${SLOTS.map(s=>`<option ${s===c.slot?"selected":""}>${s}</option>`).join("")}</select></td><td>${c.eq}</td><td>${c.cap}</td>
+ <td>${c.room?`<span class="b ok">${c.room}</span>`:'<span class="mu">Not allocated</span>'}</td></tr>`).join("")}</table></div>
+ <div class="card"><h3>Available rooms</h3><div class="grid">${S.rooms.map(r=>`<div class="card" style="margin:0"><b>${r.r}</b><p class="mu" style="margin:2px 0 0">${r.cap} seats · ${r.eq.join(", ")||"no equipment"}</p></div>`).join("")}</div></div>`},
+exams(){return`<div class="top"><div><h1>Examination management</h1><p>Schedule exams and catch conflicts before students do.</p></div></div>
+ <div class="card"><h3>Schedule an exam</h3><div class="row" style="margin-top:10px">
+ <label>Course<select id="x_c">${S.courses.map(c=>`<option value="${c.c}">${c.c} · ${esc(c.n)}</option>`).join("")}</select></label>
+ <label>Time slot<select id="x_s">${EXSLOTS.map(s=>`<option>${s}</option>`).join("")}</select></label>
+ <label>Room<select id="x_r">${S.rooms.map(r=>`<option>${r.r}</option>`).join("")}</select></label>
+ <label>Examiner<select id="x_e">${[...new Set(S.courses.map(c=>c.ins))].map(s=>`<option>${s}</option>`).join("")}</select></label>
+ <button class="btn" onclick="addExam()">Add to timetable</button></div></div>
+ <div class="card tw"><table><tr><th>Course</th><th>Slot</th><th>Room</th><th>Examiner</th><th>Check</th><th></th></tr>
+ ${S.exams.map(e=>{const f=examConf(e);return`<tr><td>${e.c} ${esc(course(e.c).n)}</td><td>${e.slot}</td><td>${e.room}</td><td>${e.ex}</td><td>${f.length?`<span class="bad">${f.join("; ")}</span>`:'<span class="ok">No conflicts</span>'}</td><td><button class="btn alt" onclick="delExam(${e.id})">Remove</button></td></tr>`}).join("")}</table></div>`},
+results(){const cc=S.rcur||S.courses[0].c,c=course(cc),m=S.marks[cc]||{},lock=S.rs[cc]==="Published",sc=S.tcur||(stu()[0]||{}).id;
+ const nxt={Draft:"Approve results",Approved:"Publish results"}[S.rs[cc]];
+ return`<div class="top"><div><h1>Results management</h1><p>Marks, grades, approval, and transcripts.</p></div></div>
+ <div class="card"><div class="row"><label>Course<select onchange="S.rcur=this.value;go()">${S.courses.map(x=>`<option value="${x.c}" ${x.c===cc?"selected":""}>${x.c} · ${esc(x.n)}</option>`).join("")}</select></label>
+ <span class="b ${lock?"ok":"wr"}">${S.rs[cc]}</span>${nxt?`<button class="btn" onclick="advance('${cc}')">${nxt}</button>`:""}</div>
+ <div class="tw" style="margin-top:12px"><table><tr><th>Student</th><th>Mark (0–100)</th><th>Grade</th></tr>
+ ${c.enr.length?c.enr.map(i=>{const g=m[i]!=null?GR(m[i])[0]:"–";return`<tr><td>${esc(name(i))}</td><td><input type="number" min="0" max="100" style="width:90px" value="${m[i]??""}" ${lock?"disabled":""} onchange="setMark('${cc}',${i},this.value)"></td><td><b>${g}</b></td></tr>`}).join(""):`<tr><td colspan="3" class="mu">No students are enrolled in this course yet.</td></tr>`}</table></div></div>
+ <div class="card"><h3>Transcript</h3><div class="row" style="margin:10px 0"><label>Student<select onchange="S.tcur=+this.value;go()">${stu().map(s=>`<option value="${s.id}" ${s.id==sc?"selected":""}>${esc(s.name)}</option>`).join("")}</select></label></div>
+ <table><tr><th>Course</th><th>Mark</th><th>Grade</th><th>Status</th></tr>${S.courses.filter(x=>x.enr.includes(sc)).map(x=>{const v=(S.marks[x.c]||{})[sc],pub=S.rs[x.c]!=="Draft";return`<tr><td>${x.c} ${esc(x.n)}</td><td>${pub&&v!=null?v:"–"}</td><td>${pub&&v!=null?GR(v)[0]:"–"}</td><td class="mu">${S.rs[x.c]}</td></tr>`}).join("")}</table>
+ <p style="margin-top:12px">Cumulative GPA (approved or published results): <b class="rank">${gpaOf(sc)}</b></p></div>`}};
+const NAV=[["dashboard","◈","Dashboard"],["admission","☺","Admission and students"],["ai","◆","AI applicant selection"],["courses","▤","Course management"],["rooms","▥","Room allocation"],["exams","▦","Examinations"],["results","✓","Results"]];
+function go(){const h=(location.hash||"#dashboard").slice(1),k=V[h]?h:"dashboard";
+ $("nav").innerHTML=`<div class="brand">E-MISEM</div><small>Executive Masters management</small>`+NAV.map(n=>`<a href="#${n[0]}" class="${n[0]===k?"on":""}"><span>${n[1]}</span>${n[2]}</a>`).join("")+`<button onclick="theme()">Switch light or dark</button>`;
+ const y=scrollY;$("main").innerHTML=V[k]();scrollTo(0,y)}
+function theme(){const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;d.dataset.theme=dark?"light":"dark"}
+function setW(k,v){S.w[k]=+v;const y=scrollY,o=[...document.querySelectorAll("details.ap")].map(d=>d.open);go();document.querySelectorAll("details.ap").forEach((d,i)=>d.open=o[i]);const e=$("w_"+k);e&&e.focus()}
+function decide(id,s){S.ap.find(a=>a.id===id).st=s;toast(name(id)+" marked "+s.toLowerCase()+" by staff");const o=[...document.querySelectorAll("details.ap")].map(d=>d.open);go();document.querySelectorAll("details.ap").forEach((d,i)=>d.open=o[i])}
+function addAp(){const n=$("n_name").value.trim();if(!n)return toast("Enter the applicant’s name first");
+ S.ap.push({id:S.nid++,name:n,g:$("n_g").value,gpa:+$("n_gpa").value,exp:+$("n_exp").value,mg:+$("n_mg").value,cert:+$("n_cert").value,int:+$("n_int").value,st:"Pending"});toast("Application submitted");go()}
+function enroll(){const s=+$("e_s").value,c=course($("e_c").value);if(!s)return toast("Accept an applicant first");
+ if(c.enr.includes(s))return toast(name(s)+" is already enrolled in "+c.c);
+ if(c.enr.length>=c.cap)return toast(c.c+" is full");
+ if(c.pre){const m=(S.marks[c.pre]||{})[s];if(m==null||m<60)return toast(name(s)+" has not passed "+c.pre+", the prerequisite")}
+ c.enr.push(s);toast(name(s)+" enrolled in "+c.c);go()}
+function setSlot(c,v){const x=course(c);x.slot=v;x.room=null;go()}
+function autoRooms(){S.courses.forEach(c=>c.room=null);let miss=0;
+ [...S.courses].sort((a,b)=>b.cap-a.cap).forEach(c=>{const ok=S.rooms.filter(r=>r.cap>=c.cap&&(!c.eq||r.eq.includes(c.eq))&&!S.courses.some(o=>o.room===r.r&&o.slot===c.slot)).sort((a,b)=>a.cap-b.cap)[0];
+ if(ok)c.room=ok.r;else miss++});toast(miss?miss+" course(s) have no feasible room":"All courses allocated");go()}
+function addExam(){S.exams.push({id:S.xid++,c:$("x_c").value,slot:$("x_s").value,room:$("x_r").value,ex:$("x_e").value});
+ const e=S.exams[S.exams.length-1],f=examConf(e);toast(f.length?"Added with a conflict – see the Check column":"Exam scheduled");go()}
+function delExam(id){S.exams=S.exams.filter(e=>e.id!==id);toast("Exam removed");go()}
+function setMark(c,i,v){(S.marks[c]=S.marks[c]||{})[i]=v===""?null:Math.max(0,Math.min(100,+v));go()}
+function advance(c){S.rs[c]=S.rs[c]==="Draft"?"Approved":"Published";toast(c+" results "+S.rs[c].toLowerCase());go()}
+addEventListener("hashchange",go);go();
+</script></body></html>
