@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MINDTRACE AI – Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm product UI, the team's Figma made real — clear, honest, teacher-friendly
+   IDEA: a learning "trace" — five coloured stops the student moves through
+   PICTURE: the working loop itself (stepper + task card), dashboard for teachers
+   COLOUR and TYPE: white, ink, the Figma's red/blue/yellow/green/black stops; Figtree
+   LAYOUT: main card + learning-profile sidebar; stacks under 860px */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0f1012);--ink:light-dark(#111114,#f2f2f3);--mute:light-dark(#5d5f66,#a3a5ad);
+--card:light-dark(#f4f4f5,#1b1c20);--line:light-dark(#e4e4e7,#2c2d33);--field:light-dark(#ffffff,#121316);
+--red:#e5383b;--blue:#2f6bff;--yellow:#f2b705;--green:#1f9d55;--black:light-dark(#111114,#f2f2f3);
+--soft-blue:light-dark(#eef3ff,#16213d);--soft-green:light-dark(#eaf7ef,#11291c);--soft-red:light-dark(#fdeeee,#2f1617);--soft-yellow:light-dark(#fff7dc,#2e2610)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 max(4vw,16px)}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 0;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.01em}
+.brand i{width:12px;height:12px;border-radius:50%;border:3px solid var(--red)}
+.brand small{font-weight:500;color:var(--mute);font-size:13px}
+.tabs{margin-inline-start:auto;display:flex;background:var(--card);border-radius:999px;padding:4px}
+.tabs button{border:0;background:none;padding:9px 16px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px;min-height:40px}
+.tabs button[aria-selected=true]{background:var(--black);color:var(--bg)}
+.mode{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute)}
+.mode select{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--field);border-radius:8px;padding:6px 8px;min-height:36px}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.08;margin:28px 0 6px;text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--mute);margin:0 0 22px;font-size:15px}
+.stepper{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:8px 0 26px;position:relative}
+.st{text-align:center;font-size:13px;color:var(--mute);position:relative;padding-top:30px}
+.st::before{content:"";position:absolute;top:10px;left:-50%;width:100%;height:4px;background:var(--line)}
+.st:first-child::before{display:none}
+.st.done::before,.st.on::before{background:var(--c)}
+.st b{position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:var(--bg);border:3px solid var(--line);z-index:1}
+.st.done b{background:var(--c);border-color:var(--c)}
+.st.on b{border-color:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+.st.on{color:var(--ink);font-weight:700}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.card{background:var(--card);border-radius:18px;padding:clamp(18px,2.5vw,26px)}
+.pill{display:inline-block;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+.q{font-size:20px;font-weight:700;margin:4px 0 14px;line-height:1.3}
+label.f{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+input[type=text],textarea{width:100%;font-size:16px;border:1px solid var(--line);background:var(--field);border-radius:12px;padding:12px 14px}
+textarea{min-height:84px;resize:vertical;font:inherit}
+.btn{border:0;background:var(--black);color:var(--bg);border-radius:999px;padding:11px 20px;font-weight:700;cursor:pointer;min-height:44px}
+.btn.ghost{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px dashed var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;min-height:34px}
+.hint{font-size:13px;color:var(--mute);margin-top:16px}
+.opts{display:grid;gap:8px;margin-top:6px}
+.opt{text-align:start;border:1px solid var(--line);background:var(--field);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:46px}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--soft-blue)}
+.opt.ok{border-color:var(--green);background:var(--soft-green)}
+.opt.no{border-color:var(--red);background:var(--soft-red)}
+.note{border-inline-start:4px solid var(--c,var(--blue));background:var(--bg);border-radius:6px;padding:12px 14px;margin-top:14px}
+.note b{display:block}
+.conf{height:8px;background:var(--line);border-radius:9px;margin:4px 0 14px;overflow:hidden}
+.conf i{display:block;height:100%;background:var(--blue);border-radius:9px}
+.small{font-size:13px;color:var(--mute)}
+ul.ev{margin:6px 0 0;padding-inline-start:20px}
+.bars{display:grid;gap:6px;margin:14px 0}
+.bar{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mute)}
+.bar span{display:grid;grid-template-columns:repeat(6,18px);gap:3px}
+.bar i{height:18px;border-radius:3px;background:var(--line)}
+.mini{border-collapse:collapse;font-size:13px;margin:12px 0;width:100%}
+.mini th,.mini td{border:1px solid var(--line);padding:6px 8px;text-align:start}
+.mini th{background:var(--bg)}
+.mini .hot{background:var(--soft-red)}.mini .safe{background:var(--soft-green)}
+.side h3{margin:0 0 14px;font-size:18px}
+.skill{margin-bottom:16px}.skill b{font-size:14px}
+.meter{height:7px;background:var(--line);border-radius:9px;margin:6px 0 4px;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:9px;transition:width .8s}
+.subj{display:grid;gap:8px}
+.subj button{text-align:start;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;cursor:pointer;font-size:14px;min-height:44px}
+.subj button[aria-pressed=true]{border-color:var(--blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 25%,transparent)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:r 1s linear infinite;vertical-align:-3px;margin-inline-end:8px}
+@keyframes r{to{transform:rotate(1turn)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}.meter i{transition:none}}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+/* teacher */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border-radius:14px;padding:14px 16px;border-top:4px solid var(--c)}
+.stat b{display:block;font-size:clamp(24px,3vw,32px);line-height:1.1}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-bottom:20px}
+.mrow{margin-bottom:12px;font-size:14px}.mrow div:first-child{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mbar{display:flex;height:9px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:4px}
+.mbar i{background:var(--red)}.mbar s{background:color-mix(in srgb,var(--red) 35%,transparent)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-bottom:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-inline-end:5px;vertical-align:-1px}
+.act{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.act.done{border-color:var(--green)}
+.act p{margin:2px 0 10px;font-size:14px;color:var(--mute)}
+.scroll{overflow-x:auto}
+table.ev{width:100%;border-collapse:collapse;font-size:14px}
+table.ev th{text-align:start;font-size:12px;color:var(--mute);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}
+table.ev td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.ev tr.live{background:var(--soft-blue)}
+table.ev tr.over td:nth-child(3){text-decoration:line-through;color:var(--mute)}
+.tag{font-size:12px;font-weight:700}.tag.y{color:var(--green)}.tag.n{color:var(--red)}.tag.p{color:var(--mute)}
+.rv{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;min-height:32px}
+.rv.on.a{border-color:var(--green);color:var(--green);font-weight:700}.rv.on.d{border-color:var(--red);color:var(--red);font-weight:700}
+footer{margin:36px 0 28px;font-size:13px;color:var(--mute);border-top:1px solid var(--line);padding-top:14px}
+[hidden]{display:none!important}
+@media(max-width:860px){.grid,.two{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tabs{margin-inline-start:0}}
+@media(max-width:600px){.st{font-size:11px}.stepper{margin-bottom:18px}
+ table.ev thead{display:none}table.ev tr{display:grid;padding:8px 0;border-bottom:1px solid var(--line)}table.ev td{border:0;padding:3px 0;padding-inline-start:7.5em}
+ table.ev td::before{content:attr(data-l);float:inline-start;width:7em;margin-inline-start:-7.5em;color:var(--mute);font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand"><i></i>MINDTRACE AI <small>Prototype</small></div>
+  <div class="mode"><label for="mode">Analysis</label>
+    <select id="mode"><option value="engine">Built-in engine</option><option value="live" disabled>Live AI (Claude) · not available here</option></select></div>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tabS" aria-selected="true">Student portal</button>
+    <button role="tab" id="tabT" aria-selected="false">Teacher dashboard</button>
+  </div>
+</header>
+
+<main id="student">
+  <h1>Beyond answers, toward real understanding</h1>
+  <p class="lede">Answer, explain your thinking, and the loop finds the next step that helps you most.</p>
+  <div class="stepper" id="stepper" aria-label="Learning loop progress"></div>
+  <div class="grid">
+    <section class="card" id="stage" aria-live="polite"></section>
+    <aside class="card side">
+      <h3>Learning profile</h3>
+      <div id="profile"></div>
+      <b style="font-size:14px">Subject</b>
+      <div class="subj" id="subj" style="margin-top:8px">
+        <button data-s="math" aria-pressed="true">Mathematics · Fractions</button>
+        <button data-s="cs" aria-pressed="false">Computer Science · Primary Keys</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<main id="teacher" hidden>
+  <h1 id="tTitle"></h1>
+  <p class="lede">AI hypotheses are suggestions. You review them and decide what happens next.</p>
+  <div class="stats" id="stats"></div>
+  <div class="two">
+    <section class="card"><h3 style="margin-top:0">Misconceptions found</h3>
+      <div class="legend"><span><i style="background:var(--red)"></i>Confirmed by follow-up</span><span><i style="background:color-mix(in srgb,var(--red) 35%,transparent)"></i>Not confirmed</span></div>
+      <div id="mis"></div></section>
+    <section class="card"><h3 style="margin-top:0">Suggested actions</h3><div id="acts"></div><p class="small" id="follow"></p></section>
+  </div>
+  <section class="card"><h3 style="margin:0">Student evidence, for your review</h3>
+    <p class="small" style="margin:4px 0 10px">Anonymised IDs. Mark whether you agree with each AI hypothesis; agreement is one of our evaluation metrics.</p>
+    <div class="scroll"><table class="ev"><thead><tr><th>Student</th><th>Concept</th><th>AI hypothesis</th><th>Follow-up</th><th>Before → after</th><th>Your review</th></tr></thead><tbody id="evRows"></tbody></table></div>
+  </section>
+</main>
+
+<footer>MINDTRACE AI · Éducathon 2026 prototype by ALPHA Team. All student data is fictitious and anonymised. AI outputs are hypotheses that a teacher reviews; nothing here grades or labels a real student. <span id="modeNote"></span></footer>
+</div>
+
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const frac=s=>{s=String(s).replace(/\s/g,'');let m=s.match(/^(-?\d+)\/(\d+)$/);if(m&&+m[2])return{n:+m[1],d:+m[2]};m=s.match(/^-?\d+$/);return m?{n:+s,d:1}:null};
+const same=(a,b)=>{a=frac(a);b=frac(b);return!!(a&&b&&a.n*b.d===b.n*a.d)};
+const COL={1:'var(--red)',2:'var(--blue)',3:'var(--yellow)',4:'var(--green)',5:'var(--black)'};
+const STEPS=['Response','AI analysis','Verify','Support','Reassess'];
+const B='var(--blue)',R='var(--red)',N='';
+const sixths=[['1/2 = 3/6',[B,B,B,N,N,N]],['1/3 = 2/6',[R,R,N,N,N,N]],['3/6 + 2/6 = 5/6',[B,B,B,R,R,N]]];
+
+const S={
+math:{name:'Mathematics · Fractions',skill:'frac',skillName:'Adding fractions',
+ q:'What is 1/2 + 1/3 ?',kind:'text',correct:'5/6',
+ chips:[['2/5','2/5','I added the tops 1+1=2 and the bottoms 2+3=5'],['5/6','5/6','I changed both into sixths: 3/6 + 2/6 = 5/6'],['5/6 (no explanation)','5/6',''],['1/6','1/6','I multiplied the tops and the bottoms'],['2/6','2/6','I made both bottoms 6 and added 1+1']],
+ detect(a,e){e=e.toLowerCase();const exp=e.replace(/\s/g,'').length>8;
+  if(same(a,'5/6'))return exp?'mastery':'unclear';
+  const raw=String(a).replace(/\s/g,'');
+  if(raw==='2/5')return'add_tb';
+  if(raw==='2/6')return'denom';
+  if(same(a,'1/6'))return'mult';
+  if(/multipl|times|×/.test(e))return'mult';
+  if(/top|bottom|numerator.*denominator/.test(e))return'add_tb';
+  return'other'},
+ mis:{
+  add_tb:{label:'Adds tops and bottoms separately',hyp:'You may be adding the numerators and the denominators separately, as if a fraction were two whole numbers.',conf:.88,ver:'same',sup:'add_tb'},
+  mult:{label:'Multiplies instead of adding',hyp:'You may be multiplying the fractions when the question asks you to add them.',conf:.8,ver:'mult',sup:'mult'},
+  denom:{label:'Changes the denominator, keeps the numerator',hyp:'You found a common bottom (6) but kept the tops as 1 and 1, so the pieces changed size while the count stayed the same.',conf:.78,ver:'denom',sup:'denom'},
+  unclear:{label:'Correct answer, method unclear',hyp:'Your answer is right, but there is no explanation yet, so we can’t tell whether it came from understanding or a lucky guess.',conf:.5,ver:'transfer',sup:'add_tb'},
+  mastery:{label:'No misconception found',hyp:'Your answer is correct and your explanation uses equal-sized pieces (a common denominator).',conf:.9,ver:'transfer',sup:'stretch'},
+  other:{label:'No known pattern matched',hyp:'This answer doesn’t match a pattern we know. Rather than guess, the loop asks one diagnostic question.',conf:.3,ver:'same',sup:'add_tb'}},
+ ver:{
+  same:{q:'Quick check: what is 1/4 + 1/4 ?',o:[['2/8','add_tb'],['1/2',null],['1/16','mult'],['1/8','other']]},
+  mult:{q:'Quick check: what is 1/2 + 1/2 ?',o:[['1/4','mult'],['1',null],['2/4','add_tb']]},
+  denom:{q:'Quick check: what is 1/2 + 1/4 ?',o:[['2/4','denom'],['3/4',null],['2/6','add_tb'],['1/8','mult']]},
+  transfer:{q:'One more, no explanation needed: what is 1/4 + 1/3 ?',o:[['7/12',null],['2/7','add_tb'],['1/12','mult'],['2/12','denom']]}},
+ sup:{
+  add_tb:{t:'Make the pieces the same size first',b:'A fraction is one number, not two. Halves and thirds are different-sized pieces, so we can’t add them directly. Turn both into sixths: 1/2 = 3/6 and 1/3 = 2/6. Now count the pieces: 3/6 + 2/6 = 5/6. The bottom stays 6, because the size of each piece does not change when you add.',bars:sixths,p:'Try one: 1/3 + 1/6 = ?',po:['2/9','3/6, which is 1/2','2/6','1/18'],pc:1},
+  mult:{t:'Adding joins pieces; multiplying takes a part of a part',b:'1/2 × 1/3 means “half of a third”, which is 1/6, smaller than both. 1/2 + 1/3 puts a half and a third together, so the answer must be bigger than 1/2. Make equal pieces and count: 3/6 + 2/6 = 5/6.',bars:sixths,p:'Try one: 1/4 + 1/2 = ?',po:['1/8','3/4','2/6'],pc:1},
+  denom:{t:'Change the bottom, scale the top',b:'Cutting each half into 3 pieces makes 3 sixths, so 1/2 becomes 3/6, not 1/6. Whatever you do to the bottom, do to the top: 1/2 = (1×3)/(2×3) = 3/6 and 1/3 = (1×2)/(3×2) = 2/6. Then 3/6 + 2/6 = 5/6.',bars:sixths,p:'Try one: 1/3 + 1/6 = ?',po:['2/6','3/6, which is 1/2','2/9'],pc:1},
+  stretch:{t:'No gap found, so here’s a stretch',b:'Your reasoning held up on a new item. Try a sum that goes past one whole: use a common denominator of 12.',p:'Try one: 3/4 + 5/6 = ?',po:['8/10','19/12, which is 1 7/12','15/24'],pc:1}},
+ re:{q:'What is 2/3 + 1/4 ?',kind:'text',check:a=>same(a,'11/12'),why:a=>same(a,'3/7')?'add_tb':null,ok:'Correct: 11/12. Your learning profile has been updated.'}},
+cs:{name:'Computer Science · Primary Keys',skill:'pk',skillName:'Choosing a primary key',
+ q:'Which column should be the primary key of the Students table?',kind:'text',
+ table:{h:['student_id','full_name','email','phone','birth_date'],r:[['20261041','Ahmed Ali','a.ali@uni.example','010 0000 0001','2006-03-14'],['20261057','Mona Hassan','mona.h@uni.example','010 0000 0002','2005-11-02'],['20261063','Omar Fathy','omar.f@uni.example','010 0000 0003','2006-07-21']]},
+ chips:[['full_name','full_name','The name is what identifies the student'],['email','email','Every student has a different email, so it is unique'],['student_id (no explanation)','student_id',''],['student_id','student_id','It is unique for each student, never empty, and never changes']],
+ detect(a,e){a=a.toLowerCase();e=e.toLowerCase();const exp=e.replace(/\s/g,'').length>8;
+  if(/id/.test(a))return!exp?'unclear':/uniq|differ|same|repeat|duplicate|chang|null|empty|stable/.test(e)?'mastery':'unclear';
+  if(/name|birth/.test(a))return'descriptive';
+  if(/mail|phone|mobile/.test(a))return'stability';
+  return'other'},
+ mis:{
+  descriptive:{label:'Picks the most descriptive column',hyp:'You may be choosing the column that best describes a student, rather than one whose value can never repeat.',conf:.82,ver:'name',sup:'descriptive'},
+  stability:{label:'Knows uniqueness, not stability',hyp:'You checked uniqueness, which is good, but a primary key must also stay the same for the life of the row, and contact details change.',conf:.74,ver:'change',sup:'stability'},
+  unclear:{label:'Right column, reason unclear',hyp:'student_id is the right choice, but without a reason we can’t yet tell whether you know why it works.',conf:.5,ver:'why',sup:'rules'},
+  mastery:{label:'No misconception found',hyp:'You picked an assigned ID and justified it with uniqueness. One check on stability will confirm it.',conf:.88,ver:'why',sup:'stretch'},
+  other:{label:'No known pattern matched',hyp:'This answer doesn’t match a pattern we know. Rather than guess, the loop asks one diagnostic question.',conf:.3,ver:'name',sup:'descriptive'}},
+ ver:{
+  name:{q:'Two new students are both named “Ahmed Ali”. Can full_name still be the primary key?',o:[['Yes, the name is still the best description','descriptive'],['No, two rows would share the same key',null],['Yes, the database tells them apart automatically','descriptive']]},
+  change:{q:'A student changes their email and phone. The Enrollments and Grades tables use the key to point to that student. If the key were email, what happens?',o:[['Nothing serious, just update the student’s row','stability'],['Every row pointing to the student must change too, or the links break',null],['The database keeps the old value automatically','stability']]},
+  why:{q:'Why is student_id a better key than email?',o:[['It is shorter and comes first in the table','unclear'],['It is unique, never empty, and never needs to change',null],['Emails can’t be stored in a key column','descriptive']]}},
+ sup:{
+  descriptive:{t:'A key must never repeat',b:'A primary key is the one value that points to exactly one row. Names repeat (two “Ahmed Ali”s), so the database couldn’t tell those rows apart. Choose a column the university assigns once per student.',tbl:{h:['student_id','full_name'],r:[['20261041','Ahmed Ali'],['20261099','Ahmed Ali']],hot:1},p:'Books(isbn, title, author, price). Best primary key?',po:['title','isbn','author'],pc:1},
+  stability:{t:'Unique isn’t enough: the key must never change',b:'Other tables store the key to point to a student. If the key is an email and the student changes it, every enrollment and grade row must change too, or it points to nobody. An assigned ID never changes, so the links stay safe.',tbl:{h:['Enrollments.student_key','course'],r:[['mona.h@uni.example','DB101'],['mona.h@uni.example','MATH110']],hot:0},p:'Customers(customer_id, email, phone, name). Which key stays valid when a customer changes email and phone?',po:['email','phone','customer_id'],pc:2},
+  rules:{t:'Three rules every primary key must pass',b:'Unique: no two rows share it. Never empty: every row has one. Never changes: other tables point to it, so changing it breaks those links. student_id passes all three; a name fails the first, and an email or phone fails the third.',tbl:{h:['Column','Unique','Never empty','Never changes'],r:[['student_id','Yes','Yes','Yes'],['full_name','No','Yes','Rarely'],['email','Yes','Yes','No']],hot:-1},p:'Books(isbn, title, author, price). Best primary key?',po:['title','isbn','author'],pc:1},
+  stretch:{t:'No gap found, so here’s a stretch',b:'You chose a stable, unique key and can justify it. Next idea: when no single column is unique, two columns can form the key together (a composite key).',p:'Enrollments(student_id, course_code, grade): a student takes many courses and a course has many students. What should the primary key be?',po:['student_id','course_code','student_id + course_code together'],pc:2}},
+ re:{q:'Courses(course_code, title, instructor, room). Which column should be the primary key?',kind:'opts',o:['title','course_code','instructor','room'],check:a=>a==='course_code',why:a=>a==='room'?'stability':'descriptive',ok:'Correct: course_code is assigned once and never changes. Your learning profile has been updated.'}}};
+
+const prof={frac:{v:42,note:''},pk:{v:55,note:''}};
+let subj='math',step=1,A=null,live=null,mode='engine';
+let session={math:null,cs:null};
+
+/* ---------- live AI (only inside the published artifact) ---------- */
+(async()=>{try{const s=await window.claude?.use?.('sample');if(s){live=s;const o=$('#mode').options[1];o.disabled=false;o.textContent='Live AI (Claude)';$('#mode').value='live';mode='live';note()}}catch(e){}})();
+$('#mode').onchange=e=>{mode=e.target.value;note()};
+function note(){$('#modeNote').textContent=mode==='live'?'Analysis: live AI (Claude via claude.ai), with the built-in engine as fallback.':'Analysis: built-in rule engine (works offline).'}
+note();
+
+async function aiAnalyse(d,a,e){
+ const cat=Object.entries(d.mis).filter(([k])=>k!=='other').map(([k,m])=>`- ${k}: ${m.label}`).join('\n');
+ const prompt=`You are the analysis engine of MINDTRACE AI, an educational prototype for university students. A diagnosis is always a hypothesis, never a verdict.
+Subject: ${d.name}
+Question: ${d.q}${d.table?`\nTable: Students(${d.table.h.join(', ')})`:''}
+Correct answer: ${d.correct||'student_id'}
+Known misconception catalog:
+${cat}
+Student answer: """${a}"""
+Student explanation: """${e||'(none)'}"""
+Return ONLY a JSON object:
+{"id": one of [${Object.keys(d.mis).filter(k=>k!=='other').map(k=>'"'+k+'"').join(', ')}, "other"],
+ "label": "short label, max 6 words",
+ "hypothesis": "one or two tentative sentences addressed to the student as 'you'",
+ "evidence": ["2 short bullets citing the answer or explanation"],
+ "confidence": number between 0 and 1,
+ "verify": {"question": "...", "options": [{"text":"...","confirms":true|false,"correct":true|false}]},
+ "support": {"title":"...","explanation":"2-3 sentences","practice":{"question":"...","options":["...","...","..."],"correct_index":0}}}
+Rules: correct answer with a sound explanation -> "mastery"; correct answer with missing or vague explanation -> "unclear". Include "verify" and "support" ONLY when id is "other": verify has 3 options, exactly one correct, at least one that confirms the hypothesis. Never invent facts about the student.`;
+ const r=await Promise.race([live(prompt,{modelTier:'quick',cache:false}),new Promise((_,j)=>setTimeout(()=>j(new Error('timeout')),25000))]);
+ const t=r.text.slice(r.text.indexOf('{'),r.text.lastIndexOf('}')+1);const j=JSON.parse(t);
+ if(!(j.id in d.mis))throw new Error('bad id');return j}
+
+/* ---------- render ---------- */
+function stepper(){$('#stepper').innerHTML=STEPS.map((s,i)=>{const n=i+1;return`<div class="st ${n<step?'done':n===step?'on':''}" style="--c:${COL[n]}"><b></b>${n}. ${s}</div>`}).join('')}
+function profile(){$('#profile').innerHTML=[['frac','Adding fractions','var(--red)'],['pk','Choosing a primary key','var(--yellow)']].map(([k,n,c])=>`<div class="skill"><b>${n}</b><div class="meter"><i style="width:${prof[k].v}%;background:${c}"></i></div><div class="small">${prof[k].v}% understanding${prof[k].note?' · '+esc(prof[k].note):''}</div></div>`).join('')}
+function opts(list,name){return`<div class="opts" role="group">${list.map((o,i)=>`<button class="opt" data-${name}="${i}">${esc(o)}</button>`).join('')}</div>`}
+function render(){stepper();profile();const d=S[subj],st=$('#stage');let h=`<span class="pill">${['',d.name,'Analysis · '+(A?.src||''),'Verification question','Personalised support','Reassessment'][step]}</span>`;
+ if(step===1){
+  if(d.table)h+=`<div class="scroll"><table class="mini"><tr>${d.table.h.map(x=>`<th>${x}</th>`).join('')}</tr>${d.table.r.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div><p class="small" style="margin:-4px 0 0">Fictitious sample rows.</p>`;
+  h+=`<p class="q">${esc(d.q)}</p><label class="f" for="ans">Your answer</label><input type="text" id="ans" autocomplete="off" placeholder="${subj==='math'?'e.g. 3/4':'column name'}">
+  <label class="f" for="exp">Explain how you got your answer</label><textarea id="exp" placeholder="In your own words…"></textarea>
+  <div class="row"><button class="btn" id="go">Submit answer</button></div>
+  <p class="hint">Demo shortcuts: fill in a sample student</p><div class="chips">${d.chips.map((c,i)=>`<button class="chip" data-chip="${i}">${esc(c[0])}</button>`).join('')}</div>`}
+ else if(step===2){
+  if(!A.ready){h+=`<p class="q"><span class="spin"></span>Reading your answer and explanation…</p><p class="small">${mode==='live'?'Live AI is analysing the reasoning.':'Built-in engine.'}</p>`}
+  else{h+=`<p class="q">Hypothesis: ${esc(A.label)}</p><p>${esc(A.hyp)}</p><div class="small">Confidence ${Math.round(A.conf*100)}%</div><div class="conf"><i style="width:${Math.round(A.conf*100)}%"></i></div>
+  <div class="note"><b>Evidence</b><ul class="ev">${A.ev.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  <p class="small">This is a hypothesis, not a verdict. One answer doesn’t prove a misconception, so we check it with one short question first.</p>
+  <div class="row"><button class="btn" id="go">Check this hypothesis</button></div>`}}
+ else if(step===3){const v=A.ver;h+=`<p class="q">${esc(v.q)}</p>${opts(v.o.map(o=>o[0]),'v')}<div id="vres"></div>`}
+ else if(step===4){const s=A.sup;h+=(A.light?`<div class="note" style="--c:var(--yellow);margin:0 0 14px"><b>Light review</b>The first hypothesis wasn’t confirmed, so this is a short recap, not a correction. Your teacher sees it as “needs a quick conversation”.</div>`:'')+
+  `<p class="q">${esc(s.t)}</p><p>${esc(s.b)}</p>`+
+  (s.bars?`<div class="bars">${s.bars.map(([l,c])=>`<div class="bar"><span>${c.map(x=>`<i style="${x?'background:'+x:''}"></i>`).join('')}</span>${l}</div>`).join('')}</div>`:'')+
+  (s.tbl?`<div class="scroll"><table class="mini"><tr>${s.tbl.h.map(x=>`<th>${x}</th>`).join('')}</tr>${s.tbl.r.map(r=>`<tr>${r.map((x,i)=>`<td class="${i===s.tbl.hot?'hot':''}">${esc(x)}</td>`).join('')}</tr>`).join('')}</table></div>`:'')+
+  `<p style="font-weight:700;margin:14px 0 6px">${esc(s.p)}</p>${opts(s.po,'p')}<div id="pres"></div>`}
+ else if(step===5){const r=d.re;h+=`<p class="q">${esc(r.q)}</p>`+(r.kind==='text'?`<input type="text" id="ra" autocomplete="off"><div class="row"><button class="btn" id="go">Submit</button></div>`:opts(r.o,'r'))+`<div id="rres"></div>`}
+ st.innerHTML=h;bind()}
+
+function bind(){const d=S[subj];
+ document.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{const c=d.chips[b.dataset.chip];$('#ans').value=c[1];$('#exp').value=c[2]});
+ const go=$('#go');
+ if(step===1){go.onclick=submit;$('#ans').onkeydown=e=>{if(e.key==='Enter')submit()}}
+ if(step===2&&go)go.onclick=()=>{step=3;render()};
+ if(step===3)document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>verify(+b.dataset.v));
+ if(step===4)document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>practice(+b.dataset.p));
+ if(step===5){if(go){go.onclick=()=>reassess($('#ra').value);$('#ra').onkeydown=e=>{if(e.key==='Enter')reassess($('#ra').value)}}
+  document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>reassess(d.re.o[+b.dataset.r],b))}}
+
+async function submit(){const d=S[subj],a=$('#ans').value.trim(),e=$('#exp').value.trim();
+ if(!a){$('#ans').focus();return}
+ step=2;A={ready:false,a,e};render();const run=++runId;
+ let id=d.detect(a,e),m={...d.mis[id]},src='Built-in engine',aiV=null,aiS=null,ev=engineEv(d,id,a,e);
+ if(mode==='live'&&live){try{const j=await aiAnalyse(d,a,e);if(run!==runId)return;id=j.id;m={...d.mis[id]};src='Live AI (Claude)';
+   if(j.label)m.label=String(j.label).slice(0,60);if(j.hypothesis)m.hyp=String(j.hypothesis).slice(0,300);
+   if(Array.isArray(j.evidence)&&j.evidence.length)ev=j.evidence.slice(0,3).map(x=>String(x).slice(0,160));
+   if(typeof j.confidence==='number')m.conf=Math.max(.05,Math.min(.99,j.confidence));
+   if(id==='other'&&j.verify?.options?.length>=2&&j.support?.practice?.options?.length>=2){
+    aiV={q:String(j.verify.question),o:j.verify.options.slice(0,4).map(o=>[String(o.text),o.correct?null:o.confirms?'other':'stray'])};
+    const p=j.support.practice;aiS={t:String(j.support.title||'Targeted explanation'),b:String(j.support.explanation||''),p:String(p.question),po:p.options.slice(0,4).map(String),pc:Math.min(+p.correct_index||0,p.options.length-1)}}}
+  catch(err){src='Built-in engine (live AI unavailable)'}}
+ else await new Promise(r=>setTimeout(r,700));
+ if(run!==runId)return;
+ A={ready:true,id,a,e,src,label:m.label,hyp:m.hyp,conf:m.conf,ev,ver:aiV||d.ver[m.ver],supKey:m.sup,aiS};
+ session[subj]={concept:d.skillName,hyp:m.label,fu:'Pending',before:prof[d.skill].v,after:null,live:true};
+ render()}
+let runId=0;
+function engineEv(d,id,a,e){const ex=e?`Explanation: “${e.length>70?e.slice(0,70)+'…':e}”`:'No explanation given';
+ if(subj==='math'){const map={add_tb:`${a} = (1+1)/(2+3): numerators and denominators added separately`,mult:`${a} matches 1×1 over 2×3: the fractions were multiplied`,denom:`${a}: the bottom became 6 but the tops stayed 1 and 1`,unclear:`${a} is correct`,mastery:`${a} is correct`,other:`${a} doesn’t match a known pattern`};return[map[id],ex]}
+ const map={descriptive:`Chose ${a}, a value that can repeat`,stability:`Chose ${a}: unique today, but it can change`,unclear:`Chose ${a}, the right column`,mastery:`Chose ${a}, the right column`,other:`Chose “${a}”, not a column in the table`};return[map[id],ex]}
+
+function verify(i){const d=S[subj],v=A.ver,pick=v.o[i][1],btns=document.querySelectorAll('[data-v]');
+ btns.forEach(b=>b.disabled=true);btns[i].classList.add('sel');
+ let msg,c,next,fu;
+ if(A.id!=='mastery'&&A.id!=='other'&&pick===A.id){fu='Confirmed';c='var(--green)';msg=['Hypothesis confirmed.','Two pieces of evidence now point the same way, so the support below targets this exact gap.'];next=A.supKey}
+ else if(A.id==='other'&&pick&&pick!=='stray'&&(pick==='other'?A.aiS:d.mis[pick])){fu='Confirmed';c='var(--green)';
+  if(pick==='other'){msg=['Hypothesis confirmed.','The follow-up supports the AI’s reading, so the support below targets it.'];next='ai'}
+  else{A.label=d.mis[pick].label;msg=['Pattern found.','Your follow-up answer shows a known pattern: “'+d.mis[pick].label+'”. The support below targets it.'];next=d.mis[pick].sup}}
+ else if(pick===null){fu='Not confirmed';
+  if(A.id==='mastery'){c='var(--green)';msg=['Understanding confirmed.','Your reasoning held up on a new item, so you get a stretch task instead of a correction.'];next='stretch';fu='Confirmed'}
+  else if(A.id==='unclear'){c='var(--green)';msg=['Guess ruled out.','You got a new item right too, so the first answer most likely came from understanding.'];next='stretch';A.label='Method confirmed';fu='Confirmed'}
+  else{c='var(--yellow)';msg=['Hypothesis not confirmed.','You got the follow-up right, so the first answer may have been a slip. MINDTRACE won’t label it; your teacher is asked to check in.'];next=A.id==='other'&&A.aiS?'ai':A.supKey;A.light=true}}
+ else if(d.mis[pick]&&pick!=='other'){fu='Confirmed';c='var(--blue)';A.label=d.mis[pick].label;msg=['A different pattern appeared.','The follow-up points to “'+d.mis[pick].label+'” instead, so the support adapts to that.'];next=d.mis[pick].sup}
+ else{fu='Not confirmed';c='var(--yellow)';msg=['Still unclear.','This answer doesn’t confirm the hypothesis either. Flagged for a short conversation with your teacher.'];next=A.aiS?'ai':A.supKey;A.light=true}
+ A.sup=next==='ai'?A.aiS:d.sup[next];A.next=next;
+ btns.forEach((b,j)=>{if(v.o[j][1]===null)b.classList.add('ok')});
+ Object.assign(session[subj],{fu,hyp:A.label});
+ $('#vres').innerHTML=`<div class="note" style="--c:${c}"><b>${esc(msg[0])}</b>${esc(msg[1])}</div><div class="row"><button class="btn" id="go2">Continue to support</button></div>`;
+ $('#go2').onclick=()=>{step=4;render()}}
+
+function practice(i){const s=A.sup,btns=document.querySelectorAll('[data-p]');const ok=i===s.pc;
+ btns[i].classList.add(ok?'ok':'no');
+ if(ok){btns.forEach(b=>b.disabled=true);$('#pres').innerHTML=`<div class="note" style="--c:var(--green)"><b>Correct. Nice work.</b></div><div class="row"><button class="btn" id="go2">I’m ready for a new question</button></div>`;$('#go2').onclick=()=>{step=5;render()}}
+ else{btns[i].disabled=true;$('#pres').innerHTML=`<div class="note" style="--c:var(--red)"><b>Not quite.</b>Look at the explanation above again and try another option.</div>`}}
+
+function reassess(val,btn){const d=S[subj],r=d.re,sk=d.skill;if(!String(val||'').trim())return;
+ const ok=r.check(String(val).trim());const before=session[subj].before;
+ document.querySelectorAll('[data-r]').forEach(b=>b.disabled=true);if(btn)btn.classList.add(ok?'ok':'no');if($('#go'))$('#go').disabled=true;
+ if(ok){prof[sk].v=Math.min(95,before+24);prof[sk].note=(A.light||A.next==='stretch')?'stable':A.label+' (improving)'}else{prof[sk].v=Math.min(95,before+4);prof[sk].note='needs another look'}
+ session[subj].after=prof[sk].v;profile();
+ const w=r.why(String(val).trim());
+ $('#rres').innerHTML=ok?`<div class="note" style="--c:var(--green)"><b>Understanding improved.</b>${esc(r.ok)}</div><div class="row"><button class="btn" id="toT">See it on the teacher dashboard</button><button class="btn ghost" id="again">Start a new session</button></div>`
+ :`<div class="note" style="--c:var(--red)"><b>Not yet.</b>${w&&d.mis[w]?'This looks like “'+esc(d.mis[w].label)+'” again. ':''}No problem: this is flagged for your teacher, and the loop will try a different explanation next time.</div><div class="row"><button class="btn" id="toT">See it on the teacher dashboard</button><button class="btn ghost" id="again">Try again</button></div>`;
+ $('#toT').onclick=()=>show('teacher');$('#again').onclick=()=>{step=1;A=null;render()}}
+
+$('#subj').onclick=e=>{const b=e.target.closest('button');if(!b)return;subj=b.dataset.s;document.querySelectorAll('#subj button').forEach(x=>x.setAttribute('aria-pressed',x===b));step=1;A=null;runId++;render()};
+
+/* ---------- teacher dashboard (fictitious sample data) ---------- */
+const rows=[
+['S-01','Adding fractions','Adds tops and bottoms separately','Confirmed',30,70],['S-02','Adding fractions','Adds tops and bottoms separately','Confirmed',35,72],
+['S-03','Adding fractions','Adds tops and bottoms separately','Confirmed',40,64],['S-04','Adding fractions','Adds tops and bottoms separately','Confirmed',28,60],
+['S-05','Adding fractions','Adds tops and bottoms separately','Confirmed',45,70],['S-06','Adding fractions','Adds tops and bottoms separately','Not confirmed',60,66],
+['S-07','Adding fractions','Multiplies instead of adding','Confirmed',38,75],['S-08','Adding fractions','Multiplies instead of adding','Confirmed',42,68],
+['S-09','Adding fractions','Changes the denominator, keeps the numerator','Confirmed',50,78],['S-10','Adding fractions','Changes the denominator, keeps the numerator','Not confirmed',62,70],
+['S-11','Adding fractions','Correct answer, method unclear','Not confirmed',80,82],['S-12','Choosing a primary key','Picks the most descriptive column','Confirmed',35,80],
+['S-13','Choosing a primary key','Picks the most descriptive column','Confirmed',40,72],['S-14','Choosing a primary key','Picks the most descriptive column','Confirmed',30,58],
+['S-15','Choosing a primary key','Knows uniqueness, not stability','Confirmed',55,85],['S-16','Choosing a primary key','Knows uniqueness, not stability','Not confirmed',70,74],
+['S-17','Choosing a primary key','Right column, reason unclear','Not confirmed',75,80],['S-18','Choosing a primary key','Knows uniqueness, not stability','Confirmed',52,70],
+['S-19','Adding fractions','Adds tops and bottoms separately','Confirmed',33,61],['S-20','Choosing a primary key','Picks the most descriptive column','Confirmed',45,77]
+].map(r=>({id:r[0],concept:r[1],hyp:r[2],fu:r[3],before:r[4],after:r[5],rev:null}));
+['a','a','d','a','a','a'].forEach((v,i)=>rows[[0,1,5,11,12,14][i]].rev=v);
+const actions={'Adds tops and bottoms separately':'10-minute bar-model mini-lesson on equal-sized pieces.','Picks the most descriptive column':'Find-the-duplicate activity on a real (anonymised) class list.','Multiplies instead of adding':'Sort-the-operation warm-up: when to multiply, when to add.','Knows uniqueness, not stability':'“What breaks when it changes?” exercise with linked tables.','Changes the denominator, keeps the numerator':'Paper-folding demo: cut each piece, count the new pieces.'};
+const approved={};
+function allRows(){const l=[];for(const k of['math','cs'])if(session[k])l.push({id:'You (live demo)',...session[k],rev:session[k].rev??null,liveKey:k});return l.concat(rows)}
+function teacher(){const R=allRows(),hy=R.filter(r=>r.hyp&&!/No misconception|No known|Method confirmed/.test(r.hyp));
+ const done=R.filter(r=>r.fu!=='Pending'),conf=done.filter(r=>r.fu==='Confirmed'&&hy.includes(r)).length,hyDone=hy.filter(r=>r.fu!=='Pending').length;
+ const gains=R.filter(r=>r.after!=null).map(r=>r.after-r.before),rev=R.filter(r=>r.rev),agree=rev.filter(r=>r.rev==='a').length;
+ const groups={};hy.forEach(r=>{const g=groups[r.hyp]??={c:0,n:0,concept:r.concept,ids:[]};r.fu==='Confirmed'?g.c++:r.fu==='Not confirmed'&&(g.n++,0)});
+ const sorted=Object.entries(groups).filter(([,g])=>g.c+g.n>0).sort((a,b)=>b[1].c-a[1].c);const max=Math.max(...sorted.map(([,g])=>g.c+g.n),1);
+ const top=sorted[0]?sorted[0][1].concept:'';
+ $('#tTitle').textContent=`Foundation Year, Group B: ${top.toLowerCase()} is the main gap this week`;
+ $('#stats').innerHTML=[[R.length,'Students assessed','var(--blue)'],[hyDone?Math.round(conf/hyDone*100)+'%':'–','Hypotheses confirmed by follow-up','var(--yellow)'],[gains.length?'+'+Math.round(gains.reduce((a,b)=>a+b,0)/gains.length)+' pts':'–','Average gain after support','var(--green)'],[rev.length?Math.round(agree/rev.length*100)+'%':'–',`Teacher agreement (${rev.length} reviewed)`,'var(--red)']].map(([v,l,c])=>`<div class="stat" style="--c:${c}"><b>${v}</b><span class="small">${l}</span></div>`).join('');
+ $('#mis').innerHTML=sorted.map(([k,g])=>`<div class="mrow"><div><b style="font-weight:600">${esc(k)}</b><span class="small">${g.c} of ${g.c+g.n} · ${esc(g.concept)}</span></div><div class="mbar"><i style="width:${g.c/max*100}%"></i><s style="width:${g.n/max*100}%"></s></div></div>`).join('');
+ $('#acts').innerHTML=sorted.filter(([k,g])=>g.c>=2&&actions[k]).slice(0,3).map(([k,g])=>{const a=approved[k];return`<div class="act ${a==='ok'?'done':''}"><b>${g.c} students: ${esc(k.charAt(0).toLowerCase()+k.slice(1))}</b><p>Suggested: ${esc(actions[k])}</p>${a?`<span class="small">${a==='ok'?'Approved · added to next session plan':'Dismissed'}</span> <button class="rv" data-undo="${esc(k)}">Undo</button>`:`<div class="row" style="margin-top:0"><button class="btn" style="min-height:36px;padding:7px 16px" data-ap="${esc(k)}">Approve</button><button class="btn ghost" style="min-height:36px;padding:7px 16px" data-dm="${esc(k)}">Dismiss</button></div>`}</div>`}).join('');
+ const nc=R.filter(r=>r.fu==='Not confirmed').map(r=>r.id);
+ $('#follow').textContent=nc.length?`Students needing a follow-up conversation (hypothesis not confirmed): ${nc.join(', ')}.`:'';
+ $('#evRows').innerHTML=R.map((r,i)=>`<tr class="${r.liveKey?'live':''} ${r.rev==='d'?'over':''}"><td data-l="Student"><b>${esc(r.id)}</b></td><td data-l="Concept">${esc(r.concept)}</td><td data-l="AI hypothesis">${esc(r.hyp)}</td><td data-l="Follow-up"><span class="tag ${r.fu==='Confirmed'?'y':r.fu==='Pending'?'p':'n'}">${esc(r.fu)}</span></td><td data-l="Before → after">${r.before}% → ${r.after!=null?r.after+'%':'…'}</td><td data-l="Your review"><button class="rv a ${r.rev==='a'?'on':''}" data-rv="${i}" data-k="a">Agree</button> <button class="rv d ${r.rev==='d'?'on':''}" data-rv="${i}" data-k="d">Disagree</button></td></tr>`).join('');
+ document.querySelectorAll('[data-rv]').forEach(b=>b.onclick=()=>{const r=allRows()[+b.dataset.rv],v=b.dataset.k;const nv=r.rev===v?null:v;if(r.liveKey)session[r.liveKey].rev=nv;else r.rev=nv;teacher()});
+ document.querySelectorAll('[data-ap]').forEach(b=>b.onclick=()=>{approved[b.dataset.ap]='ok';teacher()});
+ document.querySelectorAll('[data-dm]').forEach(b=>b.onclick=()=>{approved[b.dataset.dm]='no';teacher()});
+ document.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>{delete approved[b.dataset.undo];teacher()})}
+
+function show(v){$('#student').hidden=v!=='student';$('#teacher').hidden=v!=='teacher';$('#tabS').setAttribute('aria-selected',v==='student');$('#tabT').setAttribute('aria-selected',v==='teacher');if(v==='teacher')teacher();window.scrollTo({top:0})}
+$('#tabS').onclick=()=>show('student');$('#tabT').onclick=()=>show('teacher');
+render();
+}
+</script>
+</body>
+</html>
